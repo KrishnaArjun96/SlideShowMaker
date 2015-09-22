@@ -10,6 +10,15 @@ public class Slide {
     String imageFileName;
     String imagePath;
     String caption;
+    boolean highlight=false;
+
+    public boolean isHighlight() {
+        return highlight;
+    }
+
+    public void setHighlight(boolean highlight) {
+        this.highlight = highlight;
+    }
 
     /**
      * Constructor, it initializes all slide data.
@@ -56,5 +65,5 @@ public class Slide {
     public void setCaption(String caption) {
         this.caption = caption;
     }
-    
+
 }

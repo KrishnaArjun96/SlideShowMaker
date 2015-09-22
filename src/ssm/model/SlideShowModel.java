@@ -66,12 +66,43 @@ public class SlideShowModel {
      *
      * @param initImageFileName File name of the slide image to add.
      * @param initImagePath File path for the slide image to add.
+     * @param initCaption Caption of the slide
      */
     public void addSlide(String initImageFileName,
             String initImagePath, String initCaption) {
-        Slide slideToAdd = new Slide(initImageFileName, initImagePath,initCaption);
+        Slide slideToAdd = new Slide(initImageFileName, initImagePath, initCaption);
         slides.add(slideToAdd);
         selectedSlide = slideToAdd;
+        ui.reloadSlideShowPane(this);
+    }
+
+    public void RemoveSlide() {
+
+        slides.remove(selectedSlide);
+        ui.reloadSlideShowPane(this);
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void MoveUp() {
+        int i = slides.indexOf(selectedSlide) - 1;
+        if (i < 0) 
+            return ;
+        
+        Slide s = slides.get(i);
+        slides.set(i, selectedSlide);
+        slides.set(i + 1, s);
+
+        ui.reloadSlideShowPane(this);
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void MoveDown() {
+        int i = slides.indexOf(selectedSlide) + 1;
+        if(i>slides.size())
+            return;
+        Slide s = slides.get(i);
+        slides.set(i, selectedSlide);
+        slides.set(i - 1, s);
         ui.reloadSlideShowPane(this);
     }
 

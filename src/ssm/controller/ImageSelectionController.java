@@ -13,7 +13,7 @@ import ssm.view.SlideEditView;
  * @author McKilla Gorilla & _____________
  */
 public class ImageSelectionController {
-    
+        
     /**
      * Default contstructor doesn't need to initialize anything
      */
@@ -29,8 +29,7 @@ public class ImageSelectionController {
      * will appear after selection.
      */
     public void processSelectImage(Slide slideToEdit, SlideEditView view) {
-	FileChooser imageFileChooser = new FileChooser();
-	
+	FileChooser imageFileChooser = new FileChooser();        
 	// SET THE STARTING DIRECTORY
 	imageFileChooser.setInitialDirectory(new File(PATH_SLIDE_SHOW_IMAGES));
 	
@@ -39,7 +38,7 @@ public class ImageSelectionController {
 	FileChooser.ExtensionFilter pngFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
 	FileChooser.ExtensionFilter gifFilter = new FileChooser.ExtensionFilter("GIF files (*.gif)", "*.GIF");
 	imageFileChooser.getExtensionFilters().addAll(jpgFilter, pngFilter, gifFilter);
-	
+	       
 	// LET'S OPEN THE FILE CHOOSER
 	File file = imageFileChooser.showOpenDialog(null);
 	if (file != null) {

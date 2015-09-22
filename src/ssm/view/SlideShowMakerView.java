@@ -1,5 +1,6 @@
 package ssm.view;
 
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -7,6 +8,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.effect.SepiaTone;
+import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -16,12 +22,16 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import properties_manager.PropertiesManager;
 import ssm.LanguagePropertyType;
 import static ssm.LanguagePropertyType.TOOLTIP_ADD_SLIDE;
 import static ssm.LanguagePropertyType.TOOLTIP_EXIT;
 import static ssm.LanguagePropertyType.TOOLTIP_LOAD_SLIDE_SHOW;
+import static ssm.LanguagePropertyType.TOOLTIP_MOVE_DOWN;
+import static ssm.LanguagePropertyType.TOOLTIP_MOVE_UP;
 import static ssm.LanguagePropertyType.TOOLTIP_NEW_SLIDE_SHOW;
+import static ssm.LanguagePropertyType.TOOLTIP_REMOVE_SLIDE;
 import static ssm.LanguagePropertyType.TOOLTIP_SAVE_SLIDE_SHOW;
 import static ssm.LanguagePropertyType.TOOLTIP_VIEW_SLIDE_SHOW;
 import static ssm.StartupConstants.CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON;
@@ -30,7 +40,10 @@ import static ssm.StartupConstants.CSS_CLASS_VERTICAL_TOOLBAR_BUTTON;
 import static ssm.StartupConstants.ICON_ADD_SLIDE;
 import static ssm.StartupConstants.ICON_EXIT;
 import static ssm.StartupConstants.ICON_LOAD_SLIDE_SHOW;
+import static ssm.StartupConstants.ICON_MOVE_DOWN;
+import static ssm.StartupConstants.ICON_MOVE_UP;
 import static ssm.StartupConstants.ICON_NEW_SLIDE_SHOW;
+import static ssm.StartupConstants.ICON_REMOVE_SLIDE;
 import static ssm.StartupConstants.ICON_SAVE_SLIDE_SHOW;
 import static ssm.StartupConstants.ICON_VIEW_SLIDE_SHOW;
 import static ssm.StartupConstants.PATH_ICONS;
@@ -41,6 +54,7 @@ import ssm.model.Slide;
 import ssm.model.SlideShowModel;
 import ssm.error.ErrorHandler;
 import ssm.file.SlideShowFileManager;
+import sun.plugin.com.Dispatch;
 
 /**
  * This class provides the User Interface for this application, providing
@@ -73,6 +87,9 @@ public class SlideShowMakerView {
     // THIS WILL GO IN THE LEFT SIDE OF THE SCREEN
     VBox slideEditToolbar;
     Button addSlideButton;
+    Button removeSlideButton;
+    Button upSlideButton;
+    Button downSlideButton;
 
     // AND THIS WILL GO IN THE CENTER
     ScrollPane slidesEditorScrollPane;
@@ -93,10 +110,9 @@ public class SlideShowMakerView {
 
     // THIS CONTROLLER RESPONDS TO SLIDE SHOW EDIT BUTTONS
     private SlideShowEditController editController;
-    
+
     //To enter the title of the slide show (MY WORK)
     public static TextField title;
-    
 
     /**
      * Default constructor, it initializes the GUI for use, but does not yet
@@ -162,7 +178,9 @@ public class SlideShowMakerView {
         slideEditToolbar = new VBox();
         slideEditToolbar.getStyleClass().add(CSS_CLASS_SLIDE_SHOW_EDIT_VBOX);
         addSlideButton = this.initChildButton(slideEditToolbar, ICON_ADD_SLIDE, TOOLTIP_ADD_SLIDE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
-
+        removeSlideButton = this.initChildButton(slideEditToolbar, ICON_REMOVE_SLIDE, TOOLTIP_REMOVE_SLIDE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
+        upSlideButton = this.initChildButton(slideEditToolbar, ICON_MOVE_UP, TOOLTIP_MOVE_UP, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
+        downSlideButton = this.initChildButton(slideEditToolbar, ICON_MOVE_DOWN, TOOLTIP_MOVE_DOWN, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
         // AND THIS WILL GO IN THE CENTER
         slidesEditorPane = new VBox();
         slidesEditorScrollPane = new ScrollPane(slidesEditorPane);
@@ -193,13 +211,31 @@ public class SlideShowMakerView {
         exitButton.setOnAction(e -> {
             fileController.handleExitRequest();
         });
+        viewSlideShowButton.setOnAction(e->{
+            Stage p=new Stage();
+            BorderPane mainPane=new BorderPane();
+            
+        });
 
         // THEN THE SLIDE SHOW EDIT CONTROLS
         editController = new SlideShowEditController(this);
+
         addSlideButton.setOnAction(e -> {
             editController.processAddSlideRequest();
         });
+
+        removeSlideButton.setOnAction(e -> {
+            editController.processRemoveSlideRequest();
+        });
         
+        upSlideButton.setOnAction(e->{
+            editController.processMoveSlideUpRequest();
+        });
+        
+        downSlideButton.setOnAction(e->{
+            editController.processMoveSlideDownRequest();
+        });
+
     }
 
     /**
@@ -284,6 +320,9 @@ public class SlideShowMakerView {
 
         // AND THE SLIDESHOW EDIT TOOLBAR
         addSlideButton.setDisable(false);
+        removeSlideButton.setDisable(false);
+        upSlideButton.setDisable(false);
+        downSlideButton.setDisable(false);
     }
 
     /**
@@ -294,7 +333,8 @@ public class SlideShowMakerView {
     public void reloadSlideShowPane(SlideShowModel slideShowToLoad) {
         slidesEditorPane.getChildren().clear();
         for (Slide slide : slideShowToLoad.getSlides()) {
-            SlideEditView slideEditor = new SlideEditView(slide);
+            SlideEditView slideEditor = new SlideEditView(slide, slideShow);
+
             slidesEditorPane.getChildren().add(slideEditor);
         }
     }

@@ -8,29 +8,49 @@ import ssm.model.SlideShowModel;
 import ssm.view.SlideShowMakerView;
 
 /**
- * This controller provides responses for the slideshow edit toolbar,
- * which allows the user to add, remove, and reorder slides.
- * 
+ * This controller provides responses for the slideshow edit toolbar, which
+ * allows the user to add, remove, and reorder slides.
+ *
  * @author McKilla Gorilla & _____________
  */
 public class SlideShowEditController {
     // APP UI
     private SlideShowMakerView ui;
-    
+
     /**
      * This constructor keeps the UI for later.
      */
     public SlideShowEditController(SlideShowMakerView initUI) {
-	ui = initUI;
+        ui = initUI;
     }
-    
+
     /**
-     * Provides a response for when the user wishes to add a new
-     * slide to the slide show.
+     * Provides a response for when the user wishes to add a new slide to the
+     * slide show.
      */
     public void processAddSlideRequest() {
-	SlideShowModel slideShow = ui.getSlideShow();
-	PropertiesManager props = PropertiesManager.getPropertiesManager();
-	slideShow.addSlide(DEFAULT_SLIDE_IMAGE, PATH_SLIDE_SHOW_IMAGES,"");
+        SlideShowModel slideShow = ui.getSlideShow();
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        slideShow.addSlide(DEFAULT_SLIDE_IMAGE, PATH_SLIDE_SHOW_IMAGES, "");
+    }
+    
+    public void processRemoveSlideRequest(){
+        SlideShowModel slideShow = ui.getSlideShow();
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        slideShow.RemoveSlide();
+    
+    }
+
+    public void processMoveSlideUpRequest() {
+        SlideShowModel slideShow = ui.getSlideShow();
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        slideShow.MoveUp();
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public void processMoveSlideDownRequest(){
+        SlideShowModel slideShow = ui.getSlideShow();
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        slideShow.MoveDown();
     }
 }

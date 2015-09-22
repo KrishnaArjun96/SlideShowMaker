@@ -6,6 +6,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -48,7 +50,7 @@ public class SlideEditView extends HBox {
      *
      * @param initSlide The slide to be edited by this component.
      */
-    public SlideEditView(Slide initSlide) {
+    public SlideEditView(Slide initSlide,SlideShowModel model) {
         // FIRST SELECT THE CSS STYLE CLASS FOR THIS CONTAINER
         this.getStyleClass().add(CSS_CLASS_SLIDE_EDIT_VIEW);
 
@@ -78,6 +80,16 @@ public class SlideEditView extends HBox {
             }
 
         });
+        
+         this.setOnMouseClicked(e -> {
+                //model.getSelectedSlide(); GET CSS OF THE NOT SELECTED SLIDE.
+                model.setSelectedSlide(slide);
+                this.firstHighlight(this);
+            });
+            
+            this.imageSelectionView.setOnMouseClicked(e -> {
+                this.secondHighlight(this);
+            });
 
         // LAY EVERYTHING OUT INSIDE THIS COMPONENT
         getChildren().add(imageSelectionView);
@@ -85,9 +97,6 @@ public class SlideEditView extends HBox {
 
         // SETUP THE EVENT HANDLERS
         imageController = new ImageSelectionController();
-        imageSelectionView.setOnMousePressed(e -> {
-            imageController.processSelectImage(slide, this);
-        });
 
         updateCaption();
     }
@@ -124,6 +133,22 @@ public class SlideEditView extends HBox {
             System.out.println("Update caption failed!!");
 
         }
+    }
+
+    public void firstHighlight(SlideEditView editor) {
+        if (!this.slide.isHighlight()) {
+            this.setEffect(new SepiaTone(1.0));
+            this.slide.setHighlight(true);
+        } else {
+            this.setEffect(new SepiaTone(0.0));
+            this.slide.setHighlight(false);
+        }
+    }
+
+    public void secondHighlight(SlideEditView editor) {
+        
+        imageController.processSelectImage(slide, this);
+        editor.setEffect(new SepiaTone(1.0));
     }
 
 }
