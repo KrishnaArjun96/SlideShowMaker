@@ -1,5 +1,12 @@
 package ssm.view;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -31,9 +38,12 @@ import static ssm.LanguagePropertyType.TOOLTIP_LOAD_SLIDE_SHOW;
 import static ssm.LanguagePropertyType.TOOLTIP_MOVE_DOWN;
 import static ssm.LanguagePropertyType.TOOLTIP_MOVE_UP;
 import static ssm.LanguagePropertyType.TOOLTIP_NEW_SLIDE_SHOW;
+import static ssm.LanguagePropertyType.TOOLTIP_NEXT_SLIDE;
+import static ssm.LanguagePropertyType.TOOLTIP_PREVIOUS_SLIDE;
 import static ssm.LanguagePropertyType.TOOLTIP_REMOVE_SLIDE;
 import static ssm.LanguagePropertyType.TOOLTIP_SAVE_SLIDE_SHOW;
 import static ssm.LanguagePropertyType.TOOLTIP_VIEW_SLIDE_SHOW;
+import ssm.StartupConstants;
 import static ssm.StartupConstants.CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON;
 import static ssm.StartupConstants.CSS_CLASS_SLIDE_SHOW_EDIT_VBOX;
 import static ssm.StartupConstants.CSS_CLASS_VERTICAL_TOOLBAR_BUTTON;
@@ -43,6 +53,8 @@ import static ssm.StartupConstants.ICON_LOAD_SLIDE_SHOW;
 import static ssm.StartupConstants.ICON_MOVE_DOWN;
 import static ssm.StartupConstants.ICON_MOVE_UP;
 import static ssm.StartupConstants.ICON_NEW_SLIDE_SHOW;
+import static ssm.StartupConstants.ICON_NEXT;
+import static ssm.StartupConstants.ICON_PREVIOUS;
 import static ssm.StartupConstants.ICON_REMOVE_SLIDE;
 import static ssm.StartupConstants.ICON_SAVE_SLIDE_SHOW;
 import static ssm.StartupConstants.ICON_VIEW_SLIDE_SHOW;
@@ -54,6 +66,7 @@ import ssm.model.Slide;
 import ssm.model.SlideShowModel;
 import ssm.error.ErrorHandler;
 import ssm.file.SlideShowFileManager;
+import static ssm.file.SlideShowFileManager.SLASH;
 import sun.plugin.com.Dispatch;
 
 /**
@@ -84,6 +97,7 @@ public class SlideShowMakerView {
     // WORKSPACE
     HBox workspace;
 
+    int indexOfSlide;
     // THIS WILL GO IN THE LEFT SIDE OF THE SCREEN
     VBox slideEditToolbar;
     Button addSlideButton;
@@ -114,6 +128,18 @@ public class SlideShowMakerView {
     //To enter the title of the slide show (MY WORK)
     public static TextField title;
 
+    //Button for the slideshow presentation
+    HBox slideShowControls;
+    Button previousSlideButton;
+    Button nextSlideButton;
+    
+    //For SlideShow variables
+    Slide slide;
+    String imagePath;
+    File file;
+    URL fileURL;
+    Image slideImage;
+    ImageView image;
     /**
      * Default constructor, it initializes the GUI for use, but does not yet
      * load all the language-dependent controls, that needs to be done via the
@@ -180,6 +206,7 @@ public class SlideShowMakerView {
         addSlideButton = this.initChildButton(slideEditToolbar, ICON_ADD_SLIDE, TOOLTIP_ADD_SLIDE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
         removeSlideButton = this.initChildButton(slideEditToolbar, ICON_REMOVE_SLIDE, TOOLTIP_REMOVE_SLIDE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
         upSlideButton = this.initChildButton(slideEditToolbar, ICON_MOVE_UP, TOOLTIP_MOVE_UP, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
+
         downSlideButton = this.initChildButton(slideEditToolbar, ICON_MOVE_DOWN, TOOLTIP_MOVE_DOWN, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
         // AND THIS WILL GO IN THE CENTER
         slidesEditorPane = new VBox();
@@ -211,10 +238,76 @@ public class SlideShowMakerView {
         exitButton.setOnAction(e -> {
             fileController.handleExitRequest();
         });
-        viewSlideShowButton.setOnAction(e->{
-            Stage p=new Stage();
-            BorderPane mainPane=new BorderPane();
-            
+        viewSlideShowButton.setOnAction(e -> {
+            try {
+                Stage p = new Stage();
+                BorderPane mainPane = new BorderPane();
+                mainPane.setPadding(new Insets(12, 12, 12, 12));
+                //Top part of the pane(Add the caption)
+                //middle part of the pane(Add the image)
+                //Bottom part of the pane(Add the buttons)
+                slideShowControls = new HBox();
+                mainPane.setBottom(slideShowControls);
+
+                previousSlideButton = this.initChildButton(slideShowControls, ICON_PREVIOUS, TOOLTIP_PREVIOUS_SLIDE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
+
+                nextSlideButton = this.initChildButton(slideShowControls, ICON_NEXT, TOOLTIP_NEXT_SLIDE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
+
+                indexOfSlide = 0;
+
+                slide = slideShow.getSlides().get(indexOfSlide);
+                imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
+                file = new File(imagePath);
+                fileURL = file.toURI().toURL();
+                slideImage = new Image(fileURL.toExternalForm());
+                image = new ImageView(slideImage);
+
+                mainPane.setCenter(image);
+                mainPane.setTop(new Label(slide.getCaption()));
+                Scene slideShowScene = new Scene(mainPane, 800, 600);
+                nextSlideButton.setOnAction(e1->{
+                    try {
+                        indexOfSlide++;
+                        indexOfSlide = indexOfSlide%slideShow.getSlides().size();
+                        slide = slideShow.getSlides().get(indexOfSlide);
+                        imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
+                        file = new File(imagePath);
+                        fileURL = file.toURI().toURL();
+                        slideImage = new Image(fileURL.toExternalForm());
+                        image = new ImageView(slideImage);
+                        mainPane.setCenter(image);
+                        mainPane.setTop(new Label(slide.getCaption()));
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                });
+                
+                previousSlideButton.setOnAction( e1->{
+                    try {
+                        indexOfSlide--;
+                        indexOfSlide = (int) Math.abs(indexOfSlide%slideShow.getSlides().size());
+                        slide = slideShow.getSlides().get(indexOfSlide);
+                        imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
+                        file = new File(imagePath);
+                        fileURL = file.toURI().toURL();
+                        slideImage = new Image(fileURL.toExternalForm());
+                        image = new ImageView(slideImage);
+                        mainPane.setCenter(image);
+                        mainPane.setTop(new Label(slide.getCaption()));
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
+                
+                p.setScene(slideShowScene);
+                p.setTitle(slideShow.getTitle());
+                p.setFullScreen(true);
+                p.show();
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         });
 
         // THEN THE SLIDE SHOW EDIT CONTROLS
@@ -227,12 +320,12 @@ public class SlideShowMakerView {
         removeSlideButton.setOnAction(e -> {
             editController.processRemoveSlideRequest();
         });
-        
-        upSlideButton.setOnAction(e->{
+
+        upSlideButton.setOnAction(e -> {
             editController.processMoveSlideUpRequest();
         });
-        
-        downSlideButton.setOnAction(e->{
+
+        downSlideButton.setOnAction(e -> {
             editController.processMoveSlideDownRequest();
         });
 

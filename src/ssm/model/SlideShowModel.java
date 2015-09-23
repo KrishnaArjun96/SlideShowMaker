@@ -80,7 +80,6 @@ public class SlideShowModel {
 
         slides.remove(selectedSlide);
         ui.reloadSlideShowPane(this);
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void MoveUp() {
@@ -93,7 +92,6 @@ public class SlideShowModel {
         slides.set(i + 1, s);
 
         ui.reloadSlideShowPane(this);
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void MoveDown() {
