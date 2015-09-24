@@ -5,9 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,11 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.Effect;
-import javafx.scene.effect.GaussianBlur;
-import javafx.scene.effect.SepiaTone;
-import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -29,7 +22,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import properties_manager.PropertiesManager;
 import ssm.LanguagePropertyType;
 import static ssm.LanguagePropertyType.TOOLTIP_ADD_SLIDE;
@@ -43,7 +35,6 @@ import static ssm.LanguagePropertyType.TOOLTIP_PREVIOUS_SLIDE;
 import static ssm.LanguagePropertyType.TOOLTIP_REMOVE_SLIDE;
 import static ssm.LanguagePropertyType.TOOLTIP_SAVE_SLIDE_SHOW;
 import static ssm.LanguagePropertyType.TOOLTIP_VIEW_SLIDE_SHOW;
-import ssm.StartupConstants;
 import static ssm.StartupConstants.CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON;
 import static ssm.StartupConstants.CSS_CLASS_SLIDE_SHOW_EDIT_VBOX;
 import static ssm.StartupConstants.CSS_CLASS_VERTICAL_TOOLBAR_BUTTON;
@@ -67,7 +58,6 @@ import ssm.model.SlideShowModel;
 import ssm.error.ErrorHandler;
 import ssm.file.SlideShowFileManager;
 import static ssm.file.SlideShowFileManager.SLASH;
-import sun.plugin.com.Dispatch;
 
 /**
  * This class provides the User Interface for this application, providing
@@ -132,7 +122,7 @@ public class SlideShowMakerView {
     HBox slideShowControls;
     Button previousSlideButton;
     Button nextSlideButton;
-    
+
     //For SlideShow variables
     Slide slide;
     String imagePath;
@@ -228,6 +218,9 @@ public class SlideShowMakerView {
         fileController = new FileController(this, fileManager);
         newSlideShowButton.setOnAction(e -> {
             fileController.handleNewSlideShowRequest();
+            upSlideButton.setDisable(true);
+            downSlideButton.setDisable(true);
+            removeSlideButton.setDisable(true);
         });
         loadSlideShowButton.setOnAction(e -> {
             fileController.handleLoadSlideShowRequest();
@@ -236,7 +229,25 @@ public class SlideShowMakerView {
             fileController.handleSaveSlideShowRequest();
         });
         exitButton.setOnAction(e -> {
-            fileController.handleExitRequest();
+            Stage exit = new Stage();
+            exit.getIcons().add(new Image("file:./images/icons/Icon.png"));
+            exit.setTitle("Exit?");
+            VBox exitPane = new VBox(50);
+            exitPane.setPadding(new Insets(10,10,10,10));
+            Label question = new Label("Are you sure you want to quit?");
+            HBox YN = new HBox();
+            YN.setSpacing(10);
+            Button yes = new Button("Yes");
+            yes.setOnAction(e1->fileController.handleExitRequest());
+            Button no=new Button("No");
+            no.setOnAction(e2-> exit.close());
+            YN.setPadding(new Insets(10,10,10,10));
+            YN.getChildren().addAll(yes,no);
+            exitPane.getChildren().addAll(question,YN);
+            Scene climax=new Scene(exitPane,250,220);
+            exit.setScene(climax);
+            exit.show();
+
         });
         viewSlideShowButton.setOnAction(e -> {
             try {
@@ -266,10 +277,10 @@ public class SlideShowMakerView {
                 mainPane.setCenter(image);
                 mainPane.setTop(new Label(slide.getCaption()));
                 Scene slideShowScene = new Scene(mainPane, 800, 600);
-                nextSlideButton.setOnAction(e1->{
+                nextSlideButton.setOnAction(e1 -> {
                     try {
                         indexOfSlide++;
-                        indexOfSlide = indexOfSlide%slideShow.getSlides().size();
+                        indexOfSlide = indexOfSlide % slideShow.getSlides().size();
                         slide = slideShow.getSlides().get(indexOfSlide);
                         imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
                         file = new File(imagePath);
@@ -281,13 +292,13 @@ public class SlideShowMakerView {
                     } catch (MalformedURLException ex) {
                         Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+
                 });
-                
-                previousSlideButton.setOnAction( e1->{
+
+                previousSlideButton.setOnAction(e1 -> {
                     try {
                         indexOfSlide--;
-                        indexOfSlide = (int) Math.abs(indexOfSlide%slideShow.getSlides().size());
+                        indexOfSlide = (int) Math.abs(indexOfSlide % slideShow.getSlides().size());
                         slide = slideShow.getSlides().get(indexOfSlide);
                         imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
                         file = new File(imagePath);
@@ -300,7 +311,7 @@ public class SlideShowMakerView {
                         Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
-                
+
                 p.setScene(slideShowScene);
                 p.setTitle(slideShow.getTitle());
                 p.setFullScreen(true);
@@ -316,22 +327,26 @@ public class SlideShowMakerView {
 
         addSlideButton.setOnAction(e -> {
             editController.processAddSlideRequest();
+            saveSlideShowButton.setDisable(false);
         });
 
         removeSlideButton.setOnAction(e -> {
             editController.processRemoveSlideRequest();
+            saveSlideShowButton.setDisable(false);
         });
 
         upSlideButton.setOnAction(e -> {
             editController.processMoveSlideUpRequest();
+            saveSlideShowButton.setDisable(false);
         });
 
         downSlideButton.setOnAction(e -> {
             editController.processMoveSlideDownRequest();
+            saveSlideShowButton.setDisable(false);
         });
 
     }
- 
+
     /**
      * This function initializes all the buttons in the toolbar at the top of
      * the application window. These are related to file management.

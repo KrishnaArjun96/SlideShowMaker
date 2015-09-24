@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import properties_manager.PropertiesManager;
@@ -49,7 +50,7 @@ public class SlideEditView extends HBox {
      *
      * @param initSlide The slide to be edited by this component.
      */
-    public SlideEditView(Slide initSlide,SlideShowModel model) {
+    public SlideEditView(Slide initSlide, SlideShowModel model) {
         // FIRST SELECT THE CSS STYLE CLASS FOR THIS CONTAINER
         this.getStyleClass().add(CSS_CLASS_SLIDE_EDIT_VIEW);
 
@@ -79,16 +80,17 @@ public class SlideEditView extends HBox {
             }
 
         });
-        
-         this.setOnMouseClicked(e -> {
-                //model.getSelectedSlide(); GET CSS OF THE NOT SELECTED SLIDE.
-                model.setSelectedSlide(slide);
-                this.firstHighlight(this);
-            });
-            
-            this.imageSelectionView.setOnMouseClicked(e -> {
-                this.secondHighlight(this);
-            });
+
+        this.setOnMouseClicked((MouseEvent e) -> {
+            // GET CSS OF THE NOT SELECTED SLIDE.
+            model.setSelectedSlide(slide);
+            //SlideShowMakerView.removeSlideButton.setDisable(false);
+            this.firstHighlight(this);
+        });
+
+        this.imageSelectionView.setOnMouseClicked(e -> {
+            this.secondHighlight(this);
+        });
 
         // LAY EVERYTHING OUT INSIDE THIS COMPONENT
         getChildren().add(imageSelectionView);
@@ -145,7 +147,7 @@ public class SlideEditView extends HBox {
     }
 
     public void secondHighlight(SlideEditView editor) {
-        
+
         imageController.processSelectImage(slide, this);
         editor.setEffect(new SepiaTone(1.0));
     }
