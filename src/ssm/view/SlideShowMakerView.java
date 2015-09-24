@@ -241,6 +241,7 @@ public class SlideShowMakerView {
         viewSlideShowButton.setOnAction(e -> {
             try {
                 Stage p = new Stage();
+                p.getIcons().add(new Image("file:./images/icons/Icon.png"));
                 BorderPane mainPane = new BorderPane();
                 mainPane.setPadding(new Insets(12, 12, 12, 12));
                 //Top part of the pane(Add the caption)
@@ -330,7 +331,7 @@ public class SlideShowMakerView {
         });
 
     }
-
+ 
     /**
      * This function initializes all the buttons in the toolbar at the top of
      * the application window. These are related to file management.
