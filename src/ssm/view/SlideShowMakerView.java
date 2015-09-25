@@ -131,6 +131,7 @@ public class SlideShowMakerView {
     URL fileURL;
     Image slideImage;
     ImageView image;
+    private boolean saved = false;
 
     /**
      * Default constructor, it initializes the GUI for use, but does not yet
@@ -228,10 +229,12 @@ public class SlideShowMakerView {
             removeSlideButton.setDisable(true);
         });
         loadSlideShowButton.setOnAction(e -> {
+            saved = true;
             fileController.handleLoadSlideShowRequest();
         });
         saveSlideShowButton.setOnAction(e -> {
             fileController.handleSaveSlideShowRequest();
+            saved = true;
         });
         exitButton.setOnAction(e -> {
             Stage exit = new Stage();
@@ -341,21 +344,25 @@ public class SlideShowMakerView {
             removeSlideButton.setDisable(false);
             upSlideButton.setDisable(false);
             downSlideButton.setDisable(false);
+            saved = false;
         });
 
         removeSlideButton.setOnAction(e -> {
             editController.processRemoveSlideRequest();
             saveSlideShowButton.setDisable(false);
+            saved = false;
         });
 
         upSlideButton.setOnAction(e -> {
             editController.processMoveSlideUpRequest();
             saveSlideShowButton.setDisable(false);
+            saved = false;
         });
 
         downSlideButton.setOnAction(e -> {
             editController.processMoveSlideDownRequest();
             saveSlideShowButton.setDisable(false);
+            saved = false;
         });
 
     }
