@@ -84,7 +84,6 @@ public class SlideEditView extends HBox {
         this.setOnMouseClicked((MouseEvent e) -> {
             // GET CSS OF THE NOT SELECTED SLIDE.
             model.setSelectedSlide(slide);
-            //SlideShowMakerView.removeSlideButton.setDisable(false);
             this.firstHighlight(this);
         });
 

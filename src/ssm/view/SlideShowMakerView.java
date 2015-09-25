@@ -205,6 +205,7 @@ public class SlideShowMakerView {
         //Adding a text field to enter the title of the slide show (MY WORK)
         Label promptTitle = new Label("Title:");
         title = new TextField();
+        title.setPromptText("ENTER TITLE");
 
         // NOW PUT THESE TWO IN THE WORKSPACE
         workspace.getChildren().add(slideEditToolbar);
@@ -328,6 +329,9 @@ public class SlideShowMakerView {
         addSlideButton.setOnAction(e -> {
             editController.processAddSlideRequest();
             saveSlideShowButton.setDisable(false);
+            removeSlideButton.setDisable(false);
+            upSlideButton.setDisable(false);
+            downSlideButton.setDisable(false);
         });
 
         removeSlideButton.setOnAction(e -> {
