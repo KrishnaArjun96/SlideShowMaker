@@ -22,6 +22,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import properties_manager.PropertiesManager;
 import ssm.LanguagePropertyType;
 import static ssm.LanguagePropertyType.TOOLTIP_ADD_SLIDE;
@@ -130,6 +131,7 @@ public class SlideShowMakerView {
     URL fileURL;
     Image slideImage;
     ImageView image;
+
     /**
      * Default constructor, it initializes the GUI for use, but does not yet
      * load all the language-dependent controls, that needs to be done via the
@@ -219,6 +221,8 @@ public class SlideShowMakerView {
         fileController = new FileController(this, fileManager);
         newSlideShowButton.setOnAction(e -> {
             fileController.handleNewSlideShowRequest();
+            reloadSlideShowPane(slideShow);
+            title.setText("");
             upSlideButton.setDisable(true);
             downSlideButton.setDisable(true);
             removeSlideButton.setDisable(true);
@@ -234,18 +238,23 @@ public class SlideShowMakerView {
             exit.getIcons().add(new Image("file:./images/icons/Icon.png"));
             exit.setTitle("Exit?");
             VBox exitPane = new VBox(50);
-            exitPane.setPadding(new Insets(10,10,10,10));
-            Label question = new Label("Are you sure you want to quit?");
+            exitPane.setPadding(new Insets(10, 10, 10, 10));
+            Label question = new Label("Do you want to save before you quit?");
             HBox YN = new HBox();
             YN.setSpacing(10);
             Button yes = new Button("Yes");
-            yes.setOnAction(e1->fileController.handleExitRequest());
-            Button no=new Button("No");
-            no.setOnAction(e2-> exit.close());
-            YN.setPadding(new Insets(10,10,10,10));
-            YN.getChildren().addAll(yes,no);
-            exitPane.getChildren().addAll(question,YN);
-            Scene climax=new Scene(exitPane,250,220);
+            yes.setOnAction(e1 -> fileController.handleSaveSlideShowRequest());
+            Button no = new Button("No");
+            no.setOnAction(e2 -> {
+                exit.close();
+                primaryStage.close();
+            });
+            Button cancel = new Button("Cancel");
+            cancel.setOnAction(e3 -> exit.close());
+            YN.setPadding(new Insets(10, 10, 10, 10));
+            YN.getChildren().addAll(yes, no, cancel);
+            exitPane.getChildren().addAll(question, YN);
+            Scene climax = new Scene(exitPane, 250, 220);
             exit.setScene(climax);
             exit.show();
 
