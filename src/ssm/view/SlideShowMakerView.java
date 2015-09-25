@@ -247,6 +247,7 @@ public class SlideShowMakerView {
             YN.setSpacing(10);
             Button yes = new Button("Yes");
             yes.setOnAction(e1 -> fileController.handleSaveSlideShowRequest());
+            yes.setDisable(saved);
             Button no = new Button("No");
             no.setOnAction(e2 -> {
                 exit.close();
