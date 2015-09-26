@@ -36,6 +36,7 @@ import static ssm.LanguagePropertyType.TOOLTIP_PREVIOUS_SLIDE;
 import static ssm.LanguagePropertyType.TOOLTIP_REMOVE_SLIDE;
 import static ssm.LanguagePropertyType.TOOLTIP_SAVE_SLIDE_SHOW;
 import static ssm.LanguagePropertyType.TOOLTIP_VIEW_SLIDE_SHOW;
+import ssm.SlideShowMaker;
 import static ssm.StartupConstants.CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON;
 import static ssm.StartupConstants.CSS_CLASS_SLIDE_SHOW_EDIT_VBOX;
 import static ssm.StartupConstants.CSS_CLASS_VERTICAL_TOOLBAR_BUTTON;
@@ -208,10 +209,17 @@ public class SlideShowMakerView {
         slidesEditorPane = new VBox();
         slidesEditorScrollPane = new ScrollPane(slidesEditorPane);
 
+        Label promptTitle;
         //Adding a text field to enter the title of the slide show (MY WORK)
-        Label promptTitle = new Label("Title:");
-        title = new TextField();
-        title.setPromptText("ENTER TITLE");
+        if (SlideShowMaker.lang.getValue().equals("English")) {
+            promptTitle = new Label("Title:");
+            title = new TextField();
+            title.setPromptText("ENTER TITLE");
+        } else {
+            promptTitle = new Label("título:");
+            title = new TextField();
+            title.setPromptText("entrar título");
+        }
 
         // NOW PUT THESE TWO IN THE WORKSPACE
         workspace.getChildren().add(slideEditToolbar);
@@ -256,13 +264,29 @@ public class SlideShowMakerView {
         exitButton.setOnAction(e -> {
             Stage exit = new Stage();
             exit.getIcons().add(new Image("file:./images/icons/Icon.png"));
-            exit.setTitle("Exit?");
+            if (SlideShowMaker.lang.getValue().equals("English")) {
+                exit.setTitle("Exit?");
+            } else {
+                exit.setTitle("Salida?");
+            }
             VBox exitPane = new VBox(50);
             exitPane.setPadding(new Insets(10, 10, 10, 10));
-            Label question = new Label("Do you want to save before you quit?");
+            String labText = "";
+            if (SlideShowMaker.lang.getValue().equals("English")) {
+                labText = "Do you want to save before you quit?";
+            } else {
+                labText = "Quieres guardar antes de salir ?";
+            }
+            Label question = new Label(labText);
             HBox YN = new HBox();
             YN.setSpacing(10);
-            Button yes = new Button("Yes");
+            Button yes = new Button();
+            if (SlideShowMaker.lang.getValue().equals("English")) {
+                yes.setText("Yes");
+                        
+            } else {
+                yes.setText("Sí");
+            }
             yes.setOnAction(e1 -> fileController.handleSaveSlideShowRequest());
             yes.setDisable(saved);
             Button no = new Button("No");
@@ -271,6 +295,12 @@ public class SlideShowMakerView {
                 primaryStage.close();
             });
             Button cancel = new Button("Cancel");
+            if (SlideShowMaker.lang.getValue().equals("English")) {
+                cancel.setText("Cancel");
+                        
+            } else {
+                cancel.setText("Cancelar");
+            }
             cancel.setOnAction(e3 -> exit.close());
             YN.setPadding(new Insets(10, 10, 10, 10));
             YN.getChildren().addAll(yes, no, cancel);
@@ -505,7 +535,6 @@ public class SlideShowMakerView {
         slidesEditorPane.getChildren().clear();
         for (Slide slide : slideShowToLoad.getSlides()) {
             SlideEditView slideEditor = new SlideEditView(slide, slideShow);
-
             slidesEditorPane.getChildren().add(slideEditor);
         }
     }

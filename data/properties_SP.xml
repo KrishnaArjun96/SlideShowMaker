@@ -28,7 +28,7 @@
 	<property name="DEFAULT_SLIDE_SHOW_TITLE"   value="ENTER TÍTULO"></property>
 	
 	<!-- UI LABELS -->
-	<property name="LABEL_CAPTION"		    value="Caption:"></property>
+	<property name="LABEL_CAPTION"		    value="subtítulo:"></property>
         
         <!-- GUI LABELS -->
         <property name="COURSE_HEADING_LABEL"           value="Curso Datos de la obra"></property>
