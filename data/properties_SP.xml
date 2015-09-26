@@ -46,6 +46,9 @@
         <property name="STARTING_MONDAY_LABEL"          value="A partir del lunes:"></property>
         <property name="ENDING_FRIDAY_LABEL"            value="Poner fin a Viernes:"></property>
         <property name="LECTURE_DAY_SELECT_LABEL"       value="Días Lecture"></property>
+        <property name="ERROR_PROPERTIES_FILE_LOADING"  value="La propiedad no se pudo cargar"></property>
+        <property name="ERROR_DATA_FILE_LOADING"       value="Los datos no se pudo cargar"></property>
+
     </property_list>
     <property_options_list>
     </property_options_list>

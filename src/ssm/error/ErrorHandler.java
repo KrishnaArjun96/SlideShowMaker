@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import properties_manager.PropertiesManager;
 import ssm.LanguagePropertyType;
+import ssm.SlideShowMaker;
 import ssm.view.SlideShowMakerView;
 
 /**
@@ -23,7 +24,6 @@ import ssm.view.SlideShowMakerView;
 public class ErrorHandler {
 
     // APP UI
-
     private SlideShowMakerView ui;
 
     // KEEP THE APP UI FOR LATER
@@ -50,14 +50,20 @@ public class ErrorHandler {
         errorDialog.getIcons().add(new Image("file:./images/icons/Icon.png"));
         VBox errorPane = new VBox(50);
         Label errorMessage = new Label(errorFeedbackText);
+        //  Label testLabel = new Label(errorDialogMessage);
         Button ok = new Button("Ok");
         ok.setOnAction(e -> errorDialog.close());
         errorPane.getChildren().addAll(errorMessage, ok);
         Scene errorScene = new Scene(errorPane, 250, 250);
-        errorPane.setPadding(new Insets(12,12,12,12));
+        errorPane.setPadding(new Insets(12, 12, 12, 12));
         errorDialog.setScene(errorScene);
-        errorDialog.setTitle(errorDialogTitle);
+        if (SlideShowMaker.lang.getValue().equals("English")) {
+            errorDialog.setTitle(errorDialogTitle);
+        } else {
+            errorDialog.setTitle("Ha habido un error");
+        }
+
         errorDialog.show();
-        
-    }    
+
+    }
 }

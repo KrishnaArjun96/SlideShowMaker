@@ -3,6 +3,7 @@ package ssm.controller;
 import java.io.File;
 import java.io.IOException;
 import javafx.stage.FileChooser;
+import ssm.LanguagePropertyType;
 import ssm.model.SlideShowModel;
 import ssm.error.ErrorHandler;
 import ssm.file.SlideShowFileManager;
@@ -75,6 +76,8 @@ public class FileController {
             }
         } catch (IOException ioe) {
             ErrorHandler eH = ui.getErrorHandler();
+            eH.processError(LanguagePropertyType.ERROR_PROPERTIES_FILE_LOADING, "New Slide Error", "Could not create a new slide");
+
             // @todo provide error message
         }
     }
@@ -98,7 +101,10 @@ public class FileController {
                 promptToOpen();
             }
         } catch (IOException ioe) {
+            System.out.println("REACHED HERE");
             ErrorHandler eH = ui.getErrorHandler();
+            eH.processError(LanguagePropertyType.ERROR_PROPERTIES_FILE_LOADING, "XML Format Error", "The XML Format was invalid");
+
             //@todo provide error message
         }
     }
@@ -214,6 +220,8 @@ public class FileController {
                 SlideShowMakerView.title.setText(slideShowToLoad.getTitle());
             } catch (Exception e) {
                 ErrorHandler eH = ui.getErrorHandler();
+                eH.processError(LanguagePropertyType.ERROR_PROPERTIES_FILE_LOADING, "Error!", "The file format was not acceptable");
+
                 // @todo
             }
         }

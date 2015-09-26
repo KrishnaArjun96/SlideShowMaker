@@ -83,7 +83,7 @@ public class SlideShowMaker extends Application {
         else {
             // LET THE ERROR HANDLER PROVIDE THE RESPONSE
             ErrorHandler errorHandler = ui.getErrorHandler();
-            errorHandler.processError(LanguagePropertyType.ERROR_DATA_FILE_LOADING, "todo", "todo");
+            errorHandler.processError(LanguagePropertyType.ERROR_DATA_FILE_LOADING, "File loading error", "tt");
             System.exit(0);
         }
 
@@ -107,7 +107,7 @@ public class SlideShowMaker extends Application {
         } catch (InvalidXMLFileFormatException ixmlffe) {
             // SOMETHING WENT WRONG INITIALIZING THE XML FILE
             ErrorHandler eH = ui.getErrorHandler();
-            eH.processError(LanguagePropertyType.ERROR_PROPERTIES_FILE_LOADING, "todo", "todo");
+            eH.processError(LanguagePropertyType.ERROR_PROPERTIES_FILE_LOADING, "XML Format Error", "The XML Format was invalid");
             return false;
         }
     }
