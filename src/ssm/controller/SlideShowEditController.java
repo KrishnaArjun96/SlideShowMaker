@@ -30,6 +30,7 @@ public class SlideShowEditController {
      */
     public void processAddSlideRequest() {
         SlideShowModel slideShow = ui.getSlideShow();
+        slideShow.number++;
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         slideShow.addSlide(DEFAULT_SLIDE_IMAGE, PATH_SLIDE_SHOW_IMAGES, "");
     }
@@ -38,6 +39,10 @@ public class SlideShowEditController {
         SlideShowModel slideShow = ui.getSlideShow();
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         slideShow.RemoveSlide();
+        slideShow.number--;
+        if(slideShow.number==0){
+        
+        }
     
     }
 

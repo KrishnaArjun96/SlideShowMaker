@@ -132,6 +132,9 @@ public class SlideShowMakerView {
     Image slideImage;
     ImageView image;
     private boolean saved = false;
+    Label showCap;
+    VBox imgCap;
+    Label showTitle;
 
     /**
      * Default constructor, it initializes the GUI for use, but does not yet
@@ -228,14 +231,28 @@ public class SlideShowMakerView {
             downSlideButton.setDisable(true);
             removeSlideButton.setDisable(true);
         });
+
         loadSlideShowButton.setOnAction(e -> {
             saved = true;
             fileController.handleLoadSlideShowRequest();
+            if (slideShow.getSlides().size() > 1) {
+                upSlideButton.setDisable(false);
+                downSlideButton.setDisable(false);
+            } //IF SIZE >= 1
+            //SET REMOVESLIDE DISABLE FALSE;
+            else if (slideShow.getSlides().size() <= 1) {
+                upSlideButton.setDisable(true);
+                downSlideButton.setDisable(true);
+            } else if (slideShow.getSlides().size() == 0) {
+                removeSlideButton.setDisable(true);
+            }
         });
+
         saveSlideShowButton.setOnAction(e -> {
             fileController.handleSaveSlideShowRequest();
             saved = true;
         });
+
         exitButton.setOnAction(e -> {
             Stage exit = new Stage();
             exit.getIcons().add(new Image("file:./images/icons/Icon.png"));
@@ -274,23 +291,20 @@ public class SlideShowMakerView {
                 //Bottom part of the pane(Add the buttons)
                 slideShowControls = new HBox();
                 mainPane.setBottom(slideShowControls);
-
                 previousSlideButton = this.initChildButton(slideShowControls, ICON_PREVIOUS, TOOLTIP_PREVIOUS_SLIDE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
-
                 nextSlideButton = this.initChildButton(slideShowControls, ICON_NEXT, TOOLTIP_NEXT_SLIDE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
-
                 indexOfSlide = 0;
-
                 slide = slideShow.getSlides().get(indexOfSlide);
                 imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
                 file = new File(imagePath);
                 fileURL = file.toURI().toURL();
                 slideImage = new Image(fileURL.toExternalForm());
                 image = new ImageView(slideImage);
-
-                mainPane.setCenter(image);
-                mainPane.setTop(new Label(slide.getCaption()));
-                Scene slideShowScene = new Scene(mainPane, 800, 600);
+                showCap = new Label(slide.getCaption());
+                imgCap = new VBox();
+                imgCap.getChildren().addAll(image, showCap);
+                mainPane.setCenter(imgCap);
+                Scene slideShowScene = new Scene(mainPane, 820, 700);
                 nextSlideButton.setOnAction(e1 -> {
                     try {
                         indexOfSlide++;
@@ -301,8 +315,10 @@ public class SlideShowMakerView {
                         fileURL = file.toURI().toURL();
                         slideImage = new Image(fileURL.toExternalForm());
                         image = new ImageView(slideImage);
-                        mainPane.setCenter(image);
-                        mainPane.setTop(new Label(slide.getCaption()));
+                        showCap = new Label(slide.getCaption());
+                        imgCap = new VBox();
+                        imgCap.getChildren().addAll(image, showCap);
+                        mainPane.setCenter(imgCap);
                     } catch (MalformedURLException ex) {
                         Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -319,8 +335,10 @@ public class SlideShowMakerView {
                         fileURL = file.toURI().toURL();
                         slideImage = new Image(fileURL.toExternalForm());
                         image = new ImageView(slideImage);
-                        mainPane.setCenter(image);
-                        mainPane.setTop(new Label(slide.getCaption()));
+                        showCap = new Label(slide.getCaption());
+                        imgCap = new VBox();
+                        imgCap.getChildren().addAll(image, showCap);
+                        mainPane.setCenter(imgCap);
                     } catch (MalformedURLException ex) {
                         Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -342,16 +360,39 @@ public class SlideShowMakerView {
         addSlideButton.setOnAction(e -> {
             editController.processAddSlideRequest();
             saveSlideShowButton.setDisable(false);
-            removeSlideButton.setDisable(false);
-            upSlideButton.setDisable(false);
-            downSlideButton.setDisable(false);
             saved = false;
+
+            if (slideShow.getSlides().size() > 1) {
+                upSlideButton.setDisable(false);
+                downSlideButton.setDisable(false);
+                removeSlideButton.setDisable(false);
+            } //IF SIZE >= 1
+            //SET REMOVESLIDE DISABLE FALSE;
+            else if (slideShow.getSlides().size() == 1) {
+                upSlideButton.setDisable(true);
+                downSlideButton.setDisable(true);
+                removeSlideButton.setDisable(false);
+            } else if (slideShow.getSlides().size() == 0) {
+                removeSlideButton.setDisable(true);
+            }
         });
 
         removeSlideButton.setOnAction(e -> {
             editController.processRemoveSlideRequest();
             saveSlideShowButton.setDisable(false);
+            updateToolbarControls(saved);
             saved = false;
+
+            //SET REMOVESLIDE DISABLE FALSE;
+            if (slideShow.getSlides().size() == 1) {
+                upSlideButton.setDisable(true);
+                downSlideButton.setDisable(true);
+            } else if (slideShow.getSlides().size() == 0) {
+                upSlideButton.setDisable(true);
+                downSlideButton.setDisable(true);
+                removeSlideButton.setDisable(true);
+            }
+
         });
 
         upSlideButton.setOnAction(e -> {

@@ -17,6 +17,7 @@ public class SlideShowModel {
     String title;
     ObservableList<Slide> slides;
     Slide selectedSlide;
+    public static int number=0;
 
     public SlideShowModel(SlideShowMakerView initUI) {
         ui = initUI;
