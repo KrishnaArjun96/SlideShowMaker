@@ -11,7 +11,7 @@ import ssm.view.SlideShowMakerView;
  * This controller provides responses for the slideshow edit toolbar, which
  * allows the user to add, remove, and reorder slides.
  *
- * @author McKilla Gorilla & _____________
+ * @author McKilla Gorilla & Krishna
  */
 public class SlideShowEditController {
     // APP UI

@@ -3,7 +3,7 @@ package ssm;
  * This class provides setup constants for initializing the application
  * that are NOT language dependent.
  * 
- * @author McKilla Gorilla & _____________
+ * @author McKilla Gorilla & Krishna
  */
 public class StartupConstants {
 

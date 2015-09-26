@@ -66,7 +66,7 @@ import static ssm.file.SlideShowFileManager.SLASH;
  * controls and the entry points for creating, loading, saving, editing, and
  * viewing slide shows.
  *
- * @author McKilla Gorilla & _____________
+ * @author McKilla Gorilla & Krishna
  */
 public class SlideShowMakerView {
 

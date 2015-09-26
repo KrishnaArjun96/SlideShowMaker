@@ -15,7 +15,7 @@ import sun.security.x509.X500Name;
  * This class serves as the controller for all file toolbar operations, driving
  * the loading and saving of slide shows, among other things.
  *
- * @author McKilla Gorilla & _____________
+ * @author McKilla Gorilla & Krishna
  */
 public class FileController {
 

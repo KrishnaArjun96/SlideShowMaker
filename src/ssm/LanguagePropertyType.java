@@ -4,7 +4,7 @@ package ssm;
  * This class provides the types that will be need to be loaded from
  * language-dependent XML files.
  * 
- * @author McKilla Gorilla & _____________
+ * @author McKilla Gorilla & Krishna
  */
 public enum LanguagePropertyType {
     // TITLE FOR WINDOW TITLE BAR

@@ -21,7 +21,7 @@ import ssm.model.SlideShowModel;
 /**
  * This class uses the JSON standard to read and write slideshow data files.
  *
- * @author McKilla Gorilla & _____________
+ * @author McKilla Gorilla & Krishna
  */
 public class SlideShowFileManager {
 

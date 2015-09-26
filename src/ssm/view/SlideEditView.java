@@ -26,7 +26,7 @@ import ssm.model.SlideShowModel;
  * show, including controls for selected the slide image and changing its
  * caption.
  *
- * @author McKilla Gorilla & _____________
+ * @author McKilla Gorilla & Krishna
  */
 public class SlideEditView extends HBox {
 

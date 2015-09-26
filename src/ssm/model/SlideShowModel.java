@@ -9,7 +9,7 @@ import ssm.view.SlideShowMakerView;
 /**
  * This class manages all the data associated with a slideshow.
  *
- * @author McKilla Gorilla & _____________
+ * @author McKilla Gorilla & Krishna
  */
 public class SlideShowModel {
 

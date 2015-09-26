@@ -3,7 +3,7 @@ package ssm.model;
 /**
  * This class represents a single slide in a slide show.
  *
- * @author McKilla Gorilla & _____________
+ * @author McKilla Gorilla & Krishna
  */
 public class Slide {
 

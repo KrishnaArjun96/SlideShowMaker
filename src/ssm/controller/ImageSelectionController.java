@@ -10,7 +10,7 @@ import ssm.view.SlideEditView;
  * This controller provides a controller for when the user chooses to
  * select an image for the slide show.
  * 
- * @author McKilla Gorilla & _____________
+ * @author McKilla Gorilla & Krishna
  */
 public class ImageSelectionController {
         
