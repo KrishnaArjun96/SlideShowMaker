@@ -10,6 +10,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import xml_utilities.InvalidXMLFileFormatException;
 import properties_manager.PropertiesManager;
@@ -52,12 +55,15 @@ public class SlideShowMaker extends Application {
             //Dialog box for language selection(MY WORK)
             Stage window = new Stage();
             VBox layout = new VBox(50);
+            layout.setStyle("-fx-background-color: rgb(255,225,78);");
             layout.setPadding(new Insets(10, 10, 10, 10));
             Label prompt = new Label("Preferred language:");
+            prompt.setFont(Font.font ("Harrington", 20));
             lang = new ComboBox();
             lang.getItems().addAll("English", "Spanish");
             lang.setValue("English");
             Button ok = new Button("Ok");
+            ok.setFont(Font.font ("Harrington",16));
             ok.setAlignment(Pos.CENTER);
             layout.getChildren().addAll(prompt, lang, ok);
             window.getIcons().add(new Image("file:./images/icons/Icon.png"));

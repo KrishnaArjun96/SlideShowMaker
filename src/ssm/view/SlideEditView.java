@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import properties_manager.PropertiesManager;
 import ssm.LanguagePropertyType;
 import static ssm.StartupConstants.CSS_CLASS_SLIDE_EDIT_VIEW;
@@ -63,9 +64,12 @@ public class SlideEditView extends HBox {
 
         // SETUP THE CAPTION CONTROLS
         captionVBox = new VBox();
+        captionVBox.setSpacing(5);
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         captionLabel = new Label(props.getProperty(LanguagePropertyType.LABEL_CAPTION));
+        captionLabel.setFont(Font.font("Harrington",16));
         captionTextField = new TextField();
+        captionTextField.setFont(Font.font("Harrington",16));
         captionVBox.getChildren().add(captionLabel);
         captionVBox.getChildren().add(captionTextField);
 

@@ -1,6 +1,15 @@
 package ssm.view;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
+import static java.lang.System.out;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -20,6 +29,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -199,6 +209,7 @@ public class SlideShowMakerView {
 
         // THIS WILL GO IN THE LEFT SIDE OF THE SCREEN
         slideEditToolbar = new VBox();
+        slideEditToolbar.setSpacing(10);
         slideEditToolbar.getStyleClass().add(CSS_CLASS_SLIDE_SHOW_EDIT_VBOX);
         addSlideButton = this.initChildButton(slideEditToolbar, ICON_ADD_SLIDE, TOOLTIP_ADD_SLIDE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
         removeSlideButton = this.initChildButton(slideEditToolbar, ICON_REMOVE_SLIDE, TOOLTIP_REMOVE_SLIDE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
@@ -207,13 +218,16 @@ public class SlideShowMakerView {
         downSlideButton = this.initChildButton(slideEditToolbar, ICON_MOVE_DOWN, TOOLTIP_MOVE_DOWN, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
         // AND THIS WILL GO IN THE CENTER
         slidesEditorPane = new VBox();
+        slidesEditorPane.setSpacing(10);
         slidesEditorScrollPane = new ScrollPane(slidesEditorPane);
 
         Label promptTitle;
         //Adding a text field to enter the title of the slide show (MY WORK)
         if (SlideShowMaker.lang.getValue().equals("English")) {
             promptTitle = new Label("Title:");
+            promptTitle.setFont(Font.font("Harrington", 20));
             title = new TextField();
+            title.setFont(Font.font("Harrington", 14));
             title.setPromptText("ENTER TITLE");
         } else {
             promptTitle = new Label("título:");
@@ -270,6 +284,7 @@ public class SlideShowMakerView {
                 exit.setTitle("Salida?");
             }
             VBox exitPane = new VBox(50);
+            exitPane.setStyle("-fx-background-color: rgb(255,225,78);");
             exitPane.setPadding(new Insets(10, 10, 10, 10));
             String labText = "";
             if (SlideShowMaker.lang.getValue().equals("English")) {
@@ -278,26 +293,33 @@ public class SlideShowMakerView {
                 labText = "Quieres guardar antes de salir ?";
             }
             Label question = new Label(labText);
+            question.setFont(Font.font("Harrington", 16));
             HBox YN = new HBox();
             YN.setSpacing(10);
             Button yes = new Button();
+            yes.setFont(Font.font("Harrington", 16));
             if (SlideShowMaker.lang.getValue().equals("English")) {
                 yes.setText("Yes");
-                        
             } else {
                 yes.setText("Sí");
             }
-            yes.setOnAction(e1 -> fileController.handleSaveSlideShowRequest());
+            yes.setOnAction(e1 -> {
+                fileController.handleSaveSlideShowRequest();
+                exit.close();
+                primaryStage.close();
+            });
             yes.setDisable(saved);
             Button no = new Button("No");
+            no.setFont(Font.font("Harrington", 16));
             no.setOnAction(e2 -> {
                 exit.close();
                 primaryStage.close();
             });
             Button cancel = new Button("Cancel");
+            cancel.setFont(Font.font("Harrington", 16));
             if (SlideShowMaker.lang.getValue().equals("English")) {
                 cancel.setText("Cancel");
-                        
+
             } else {
                 cancel.setText("Cancelar");
             }
@@ -305,83 +327,143 @@ public class SlideShowMakerView {
             YN.setPadding(new Insets(10, 10, 10, 10));
             YN.getChildren().addAll(yes, no, cancel);
             exitPane.getChildren().addAll(question, YN);
-            Scene climax = new Scene(exitPane, 250, 220);
+            Scene climax = new Scene(exitPane, 300, 250);
             exit.setScene(climax);
             exit.show();
 
         });
         viewSlideShowButton.setOnAction(e -> {
-            try {
-                Stage p = new Stage();
-                p.getIcons().add(new Image("file:./images/icons/Icon.png"));
-                BorderPane mainPane = new BorderPane();
-                mainPane.setPadding(new Insets(12, 12, 12, 12));
-                //Top part of the pane(Add the caption)
-                //middle part of the pane(Add the image)
-                //Bottom part of the pane(Add the buttons)
-                slideShowControls = new HBox();
-                mainPane.setBottom(slideShowControls);
-                previousSlideButton = this.initChildButton(slideShowControls, ICON_PREVIOUS, TOOLTIP_PREVIOUS_SLIDE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
-                nextSlideButton = this.initChildButton(slideShowControls, ICON_NEXT, TOOLTIP_NEXT_SLIDE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
-                indexOfSlide = 0;
-                slide = slideShow.getSlides().get(indexOfSlide);
-                imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
-                file = new File(imagePath);
-                fileURL = file.toURI().toURL();
-                slideImage = new Image(fileURL.toExternalForm());
-                image = new ImageView(slideImage);
-                showCap = new Label(slide.getCaption());
-                imgCap = new VBox();
-                imgCap.getChildren().addAll(image, showCap);
-                mainPane.setCenter(imgCap);
-                Scene slideShowScene = new Scene(mainPane, 820, 700);
-                nextSlideButton.setOnAction(e1 -> {
-                    try {
-                        indexOfSlide++;
-                        indexOfSlide = indexOfSlide % slideShow.getSlides().size();
-                        slide = slideShow.getSlides().get(indexOfSlide);
-                        imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
-                        file = new File(imagePath);
-                        fileURL = file.toURI().toURL();
-                        slideImage = new Image(fileURL.toExternalForm());
-                        image = new ImageView(slideImage);
-                        showCap = new Label(slide.getCaption());
-                        imgCap = new VBox();
-                        imgCap.getChildren().addAll(image, showCap);
-                        mainPane.setCenter(imgCap);
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+            File Directory = new File("C:\\Users\\Krishna\\Desktop\\HW 3\\SlideshowMaker\\src\\ssm\\sites\\" + slideShow.getTitle());
 
-                });
-
-                previousSlideButton.setOnAction(e1 -> {
-                    try {
-                        indexOfSlide--;
-                        indexOfSlide = (int) Math.abs(indexOfSlide % slideShow.getSlides().size());
-                        slide = slideShow.getSlides().get(indexOfSlide);
-                        imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
-                        file = new File(imagePath);
-                        fileURL = file.toURI().toURL();
-                        slideImage = new Image(fileURL.toExternalForm());
-                        image = new ImageView(slideImage);
-                        showCap = new Label(slide.getCaption());
-                        imgCap = new VBox();
-                        imgCap.getChildren().addAll(image, showCap);
-                        mainPane.setCenter(imgCap);
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                });
-
-                p.setScene(slideShowScene);
-                p.setTitle(slideShow.getTitle());
-                p.setFullScreen(true);
-                p.show();
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
+            // if the directory does not exist, create it
+            if (!Directory.exists()) {
+                System.out.println("creating directory: " + Directory);
+                boolean result = false;
+                try {
+                    Directory.mkdir();
+                    result = true;
+                } catch (SecurityException se) {
+                    System.out.println("The directory is already created");
+                }
+                if (result) {
+                    System.out.println("DIR created");
+                }
             }
+//            boolean success = false;
+//            File[] reviews = Directory.listFiles();
+//            String trainingDir = Directory.getAbsolutePath() + "/trainingData";
+//            File trDir = new File(trainingDir);
+//            success = trDir.mkdir();
+//            for (int i = 1; i <= 20; i++) {
+//                File review = reviews[i];
+//
+//            }
+            try {
+                File file = new File("C:\\Users\\Krishna\\Desktop\\HW 3\\SlideshowMaker\\src\\ssm\\sites\\" + slideShow.getTitle() + "\\index.html");
+                file.createNewFile();
+                Writer writer = new BufferedWriter(new FileWriter(file));
+                writer.write("<!DOCTYPE html>\n"
+                        + "<html>\n"
+                        + "    <head>\n"
+                        + "        <title>" + slideShow.getTitle() + "</title>\n"
+                        + "        <meta charset=\"UTF-8\">\n"
+                        + "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+                        + "    </head>\n"
+                        + "    <body>\n"
+                        + "        <div>\n"
+                        + "         <img src=\"pic_mountain.jpg\" alt=\"Mountain View\" style=\"width:304px;height:228px;\"> \n "
+                        + "            <button> play </button>\n"
+                        + "            <button> Previous </button>\n"
+                        + "            <button> Next </button>\n"
+                        + "            <button> Pause </button>\n"
+                        + "        </div>\n"
+                        + "    </body>\n"
+                        + "</html>");
+                writer.close();
 
+                File jsFile = new File("C:\\Users\\Krishna\\Desktop\\HW 3\\SlideshowMaker\\src\\ssm\\sites\\" + slideShow.getTitle() + "\\slideshow.js");
+                Writer writerJS = new BufferedWriter(new FileWriter(jsFile));
+                writer.write("<script>\n"
+                        +"\n"
+                        +""
+                        +""
+                        +"</script>\n");
+
+            } catch (IOException ex) {
+                System.out.println("Exception");
+            }
+//            try {
+//                Stage p = new Stage();
+//                p.getIcons().add(new Image("file:./images/icons/Icon.png"));
+//                BorderPane mainPane = new BorderPane();
+//                mainPane.setPadding(new Insets(12, 12, 12, 12));
+//                //Top part of the pane(Add the caption)
+//                //middle part of the pane(Add the image)
+//                //Bottom part of the pane(Add the buttons)
+//                slideShowControls = new HBox();
+//                slideShowControls.setSpacing(5);
+//                mainPane.setBottom(slideShowControls);
+//                previousSlideButton = this.initChildButton(slideShowControls, ICON_PREVIOUS, TOOLTIP_PREVIOUS_SLIDE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
+//                nextSlideButton = this.initChildButton(slideShowControls, ICON_NEXT, TOOLTIP_NEXT_SLIDE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
+//                indexOfSlide = 0;
+//                slide = slideShow.getSlides().get(indexOfSlide);
+//                imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
+//                file = new File(imagePath);
+//                fileURL = file.toURI().toURL();
+//                slideImage = new Image(fileURL.toExternalForm());
+//                image = new ImageView(slideImage);
+//                showCap = new Label(slide.getCaption());
+//                imgCap = new VBox();
+//                imgCap.getChildren().addAll(image, showCap);
+//                mainPane.setCenter(imgCap);
+//                Scene slideShowScene = new Scene(mainPane, 820, 700);
+//                nextSlideButton.setOnAction(e1 -> {
+//                    try {
+//                        indexOfSlide++;
+//                        indexOfSlide = indexOfSlide % slideShow.getSlides().size();
+//                        slide = slideShow.getSlides().get(indexOfSlide);
+//                        imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
+//                        file = new File(imagePath);
+//                        fileURL = file.toURI().toURL();
+//                        slideImage = new Image(fileURL.toExternalForm());
+//                        image = new ImageView(slideImage);
+//                        showCap = new Label(slide.getCaption());
+//                        imgCap = new VBox();
+//                        imgCap.getChildren().addAll(image, showCap);
+//                        mainPane.setCenter(imgCap);
+//                    } catch (MalformedURLException ex) {
+//                        Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//
+//                });
+//
+//                previousSlideButton.setOnAction(e1 -> {
+//                    try {
+//                        indexOfSlide--;
+//                        indexOfSlide = (int) Math.abs(indexOfSlide % slideShow.getSlides().size());
+//                        slide = slideShow.getSlides().get(indexOfSlide);
+//                        imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
+//                        file = new File(imagePath);
+//                        fileURL = file.toURI().toURL();
+//                        slideImage = new Image(fileURL.toExternalForm());
+//                        image = new ImageView(slideImage);
+//                        showCap = new Label(slide.getCaption());
+//                        imgCap = new VBox();
+//                        imgCap.getChildren().addAll(image, showCap);
+//                        mainPane.setCenter(imgCap);
+//                    } catch (MalformedURLException ex) {
+//                        Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                });
+//
+//                p.setScene(slideShowScene);
+//                p.setTitle(slideShow.getTitle());
+//                p.setFullScreen(true);
+//                p.show();
+//            } catch (MalformedURLException ex) {
+//                Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//
         });
 
         // THEN THE SLIDE SHOW EDIT CONTROLS
@@ -445,6 +527,7 @@ public class SlideShowMakerView {
      */
     private void initFileToolbar() {
         fileToolbarPane = new FlowPane();
+        fileToolbarPane.setHgap(5);
 
         // HERE ARE OUR FILE TOOLBAR BUTTONS, NOTE THAT SOME WILL
         // START AS ENABLED (false), WHILE OTHERS DISABLED (true)
@@ -472,6 +555,7 @@ public class SlideShowMakerView {
 
         // SETUP THE UI, NOTE WE'LL ADD THE WORKSPACE LATER
         ssmPane = new BorderPane();
+        ssmPane.setStyle("-fx-background-color: rgb(255,225,78);");
         ssmPane.setTop(fileToolbarPane);
         primaryScene = new Scene(ssmPane);
 
