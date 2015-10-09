@@ -15,7 +15,7 @@ public class StartupConstants {
     public static String PATH_IMAGES = "./images/";
     public static String PATH_ICONS = PATH_IMAGES + "icons/";
     public static String PATH_SLIDE_SHOW_IMAGES = PATH_IMAGES + "slide_show_images/";
-    public static String PATH_CSS = "./ssm/style/";
+    public static String PATH_CSS = "ssm/style/";
     public static String STYLE_SHEET_UI = PATH_CSS + "SlideShowMakerStyle.css";
 
     // HERE ARE THE LANGUAGE INDEPENDENT GUI ICONS
@@ -41,7 +41,7 @@ public class StartupConstants {
     public static String    CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON = "horizontal_toolbar_button";
     public static String    CSS_CLASS_SLIDE_SHOW_EDIT_VBOX = "slide_show_edit_vbox";
     public static String    CSS_CLASS_SLIDE_EDIT_VIEW = "slide_edit_view";
-    
+    public static String    CSS_CLASS_LANGUAGE_PROMPT = "language_prompt_vbox";
     // UI LABELS
     public static String    LABEL_SLIDE_SHOW_TITLE = "slide_show_title";
 

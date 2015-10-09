@@ -1,0 +1,1 @@
+var indexOfSlide=0;function Prev(){indexOfSlide--;}

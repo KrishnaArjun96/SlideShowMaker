@@ -2,12 +2,12 @@
  *  This CSS provides all the style settings for
  *  our JavaFX controls.
  *
- *  @author McKilla Gorilla & _____________
+ *  @author McKilla Gorilla & Krishna
  */
 
 .slide_show_edit_vbox {
     -fx-background-radius: 5.0;
-    -fx-background-color: rgb(230, 50, 50);
+    -fx-background-color: rgb(255,225,78);
     -fx-border-color: rgb(50, 5, 5);
 }
 
@@ -28,4 +28,13 @@
 .horizontal_toolbar_button {
     -fx-padding-left: 10px;
     -fx-padding-right: 20px;
+}
+
+.language_prompt_vbox{
+    -fx-background-color: rgb(255,225,78);
+    -fx-padding: 12px 12px 12px 12px;
+    -fx-font-family:"Harrington";
+    -fx-font-size: 20pt;
+    -fx-alignment: CENTER;
+    
 }

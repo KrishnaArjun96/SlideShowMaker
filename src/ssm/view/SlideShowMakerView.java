@@ -12,6 +12,10 @@ import java.io.Writer;
 import static java.lang.System.out;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.geometry.Insets;
@@ -30,6 +34,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.web.WebView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -333,33 +338,18 @@ public class SlideShowMakerView {
 
         });
         viewSlideShowButton.setOnAction(e -> {
-            File Directory = new File("C:\\Users\\Krishna\\Desktop\\HW 3\\SlideshowMaker\\src\\ssm\\sites\\" + slideShow.getTitle());
 
-            // if the directory does not exist, create it
-            if (!Directory.exists()) {
-                System.out.println("creating directory: " + Directory);
-                boolean result = false;
-                try {
-                    Directory.mkdir();
-                    result = true;
-                } catch (SecurityException se) {
-                    System.out.println("The directory is already created");
-                }
-                if (result) {
-                    System.out.println("DIR created");
-                }
+            File Sites = new File("sites");
+            Sites.mkdir();
+
+            File Directory = new File("sites/" + slideShow.getTitle());
+            if (Directory.exists()) {
+                Directory.delete();
             }
-//            boolean success = false;
-//            File[] reviews = Directory.listFiles();
-//            String trainingDir = Directory.getAbsolutePath() + "/trainingData";
-//            File trDir = new File(trainingDir);
-//            success = trDir.mkdir();
-//            for (int i = 1; i <= 20; i++) {
-//                File review = reviews[i];
-//
-//            }
+            Directory.mkdir();
+
             try {
-                File file = new File("C:\\Users\\Krishna\\Desktop\\HW 3\\SlideshowMaker\\src\\ssm\\sites\\" + slideShow.getTitle() + "\\index.html");
+                File file = new File("sites/" + slideShow.getTitle() + "/index.html");
                 file.createNewFile();
                 Writer writer = new BufferedWriter(new FileWriter(file));
                 writer.write("<!DOCTYPE html>\n"
@@ -368,10 +358,11 @@ public class SlideShowMakerView {
                         + "        <title>" + slideShow.getTitle() + "</title>\n"
                         + "        <meta charset=\"UTF-8\">\n"
                         + "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+                        + "        <link rel=\"stylesheet\" type=\"text/css\" href=\"sites/" + slideShow.getTitle() + "/CSS/slideshow.css\">\n"
                         + "    </head>\n"
                         + "    <body>\n"
                         + "        <div>\n"
-                        + "         <img src=\"pic_mountain.jpg\" alt=\"Mountain View\" style=\"width:304px;height:228px;\"> \n "
+                        + "         <img src=\"img/ArchesUtah.jpg\" alt=\"Mountain View\" style=\"width:304px;height:228px;\"> \n "
                         + "            <button> play </button>\n"
                         + "            <button> Previous </button>\n"
                         + "            <button> Next </button>\n"
@@ -381,13 +372,55 @@ public class SlideShowMakerView {
                         + "</html>");
                 writer.close();
 
-                File jsFile = new File("C:\\Users\\Krishna\\Desktop\\HW 3\\SlideshowMaker\\src\\ssm\\sites\\" + slideShow.getTitle() + "\\slideshow.js");
+                File cssDirectory = new File("sites/" + slideShow.getTitle() + "/CSS");
+                cssDirectory.mkdir();
+
+                File cssFile = new File("sites/" + slideShow.getTitle() + "/CSS/slideshow.css");
+                Writer writerCSS = new BufferedWriter(new FileWriter(cssFile));
+                writerCSS.write("body {\n"
+                        + "    background-color: #ffff99;\n"
+                        + "}\n"
+                        + "\n"
+                        + "h1 {\n"
+                        + "    color: orange;\n"
+                        + "    text-align: center;\n"
+                        + "}\n"
+                        + "\n"
+                        + "p {\n"
+                        + "    font-family: \"HArrington\";\n"
+                        + "    font-size: 20px;\n"
+                        + "}");
+                writerCSS.close();
+
+                File jsDirectory = new File("sites/" + slideShow.getTitle() + "/JS");
+                jsDirectory.mkdir();
+
+                File jsFile = new File("sites/" + slideShow.getTitle() + "/JS/slideshow.js");
                 Writer writerJS = new BufferedWriter(new FileWriter(jsFile));
-                writer.write("<script>\n"
-                        +"\n"
-                        +""
-                        +""
-                        +"</script>\n");
+                
+                writerJS.write("var indexOfSlide=0;"
+                        + "function Prev(){"
+                        + "indexOfSlide--;"
+                        + "}");
+                writerJS.close();
+
+                File imgDirectory = new File("sites/" + slideShow.getTitle() + "/img");
+                imgDirectory.mkdir();
+                String source="";
+                String dest="";
+                for(int i=0;i<slideShow.getSlides().size();i++){
+                source =slideShow.getSlides().get(i).getImagePath()+SLASH+slideShow.getSlides().get(i).getImageFileName();
+                dest ="sites/"+slideShow.getTitle()+"/img/"+slideShow.getSlides().get(i).getImageFileName();        
+                Files.copy(Paths.get(source),Paths.get(dest),StandardCopyOption.REPLACE_EXISTING);                
+                }
+                
+                WebView webView=new WebView();
+                webView.getEngine().load(file.toURI().toString());
+                Stage blah=new Stage();
+                blah.setTitle(slideShow.getTitle());
+                Scene blahScene=new Scene(webView,350,350);
+                blah.setScene(blahScene);
+                blah.show();
 
             } catch (IOException ex) {
                 System.out.println("Exception");

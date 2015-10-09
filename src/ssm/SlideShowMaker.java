@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import xml_utilities.InvalidXMLFileFormatException;
 import properties_manager.PropertiesManager;
 import static ssm.LanguagePropertyType.TITLE_WINDOW;
+import static ssm.StartupConstants.CSS_CLASS_LANGUAGE_PROMPT;
 import static ssm.StartupConstants.PATH_DATA;
 import static ssm.StartupConstants.PROPERTIES_SCHEMA_FILE_NAME;
 import static ssm.StartupConstants.UI_PROPERTIES_FILE_NAME;
@@ -55,6 +56,7 @@ public class SlideShowMaker extends Application {
             //Dialog box for language selection(MY WORK)
             Stage window = new Stage();
             VBox layout = new VBox(50);
+            //layout.getStylesheets().add(CSS_CLASS_LANGUAGE_PROMPT);
             layout.setStyle("-fx-background-color: rgb(255,225,78);");
             layout.setPadding(new Insets(10, 10, 10, 10));
             Label prompt = new Label("Preferred language:");
