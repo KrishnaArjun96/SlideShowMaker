@@ -1,13 +1,16 @@
 body {
-    background-color: #ffff99;
 }
 
 h1 {
-    color: orange;
-    text-align: center;
-}
+    font-family: "Harrington";
+    text-align: left;
+    background-color:#CC0000;
+    font-size: 40px;    text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;}
 
-p {
-    font-family: "HArrington";
+#Captions {
+    text-align: center;
+    background-color: navy;
+}p {
+    font-family: "Harrington";
     font-size: 20px;
 }

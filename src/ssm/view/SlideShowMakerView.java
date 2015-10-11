@@ -215,6 +215,7 @@ public class SlideShowMakerView {
         // THIS WILL GO IN THE LEFT SIDE OF THE SCREEN
         slideEditToolbar = new VBox();
         slideEditToolbar.setSpacing(10);
+        slideEditToolbar.setPadding(new Insets(5, 5, 5, 5));
         slideEditToolbar.getStyleClass().add(CSS_CLASS_SLIDE_SHOW_EDIT_VBOX);
         addSlideButton = this.initChildButton(slideEditToolbar, ICON_ADD_SLIDE, TOOLTIP_ADD_SLIDE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
         removeSlideButton = this.initChildButton(slideEditToolbar, ICON_REMOVE_SLIDE, TOOLTIP_REMOVE_SLIDE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
@@ -337,6 +338,8 @@ public class SlideShowMakerView {
             exit.show();
 
         });
+
+        //The slideshow web view is generated here
         viewSlideShowButton.setOnAction(e -> {
 
             File Sites = new File("sites");
@@ -358,15 +361,22 @@ public class SlideShowMakerView {
                         + "        <title>" + slideShow.getTitle() + "</title>\n"
                         + "        <meta charset=\"UTF-8\">\n"
                         + "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
-                        + "        <link rel=\"stylesheet\" type=\"text/css\" href=\"sites/" + slideShow.getTitle() + "/CSS/slideshow.css\">\n"
+                        + "        <link rel=\"stylesheet\" type=\"text/css\" href=\"CSS/slideshow.css\">\n"
+                        + "        <script src=\"JS/slideshow.js\" type=\"text/javascript\"></script>\n"
                         + "    </head>\n"
                         + "    <body>\n"
-                        + "        <div>\n"
-                        + "         <img src=\"img/ArchesUtah.jpg\" alt=\"Mountain View\" style=\"width:304px;height:228px;\"> \n "
-                        + "            <button> play </button>\n"
-                        + "            <button> Previous </button>\n"
-                        + "            <button> Next </button>\n"
-                        + "            <button> Pause </button>\n"
+                        + "        <h1>" + slideShow.getTitle() + "</h1>\n"
+                        + "        <div align=\"center\" color=\"purple\">\n"
+                        + "         <img src=\"img/" + slideShow.getSlides().get(0).getImageFileName() + "\" id=\"slideShow\" alt=\"Image doesn't exist\" style=\"width:454px;height:458px;\"> \n "
+                        + "            <br>\n"
+                        + "        </div>\n"
+                        + "        <div id=\"Captions\">\n"
+                        + "            <label id=\"caption\">" + slideShow.getSlides().get(0).getCaption() + "</label>\n"
+                        + "            <br>\n"
+                        + "            <button onClick=\"prevSlide()\"> Previous </button>\n"
+                        + "            <button id=\"play\" onClick=\"playSlide()\"> Play </button>"
+                        + "            <button id=\"pause\" onClick=\"pause()\"> Pause </button>"
+                        + "            <button onClick=\"nextSlide()\"> Next </button>\n"
                         + "        </div>\n"
                         + "    </body>\n"
                         + "</html>");
@@ -378,125 +388,101 @@ public class SlideShowMakerView {
                 File cssFile = new File("sites/" + slideShow.getTitle() + "/CSS/slideshow.css");
                 Writer writerCSS = new BufferedWriter(new FileWriter(cssFile));
                 writerCSS.write("body {\n"
-                        + "    background-color: #ffff99;\n"
                         + "}\n"
                         + "\n"
                         + "h1 {\n"
-                        + "    color: orange;\n"
-                        + "    text-align: center;\n"
+                        + "    font-family: \"Harrington\";\n"
+                        + "    text-align: left;\n"
+                        + "    background-color:#CC0000;\n"
+                        + "    font-size: 40px;"
+                        + "    text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;"
                         + "}\n"
                         + "\n"
+                        + "#Captions {\n"
+                        + "    text-align: center;\n"
+                        + "    background-color: navy;\n"
+                        + "}"
                         + "p {\n"
-                        + "    font-family: \"HArrington\";\n"
+                        + "    font-family: \"Harrington\";\n"
                         + "    font-size: 20px;\n"
                         + "}");
                 writerCSS.close();
+
+                File imgDirectory = new File("sites/" + slideShow.getTitle() + "/img");
+                imgDirectory.mkdir();
+                String source = "";
+                String dest = "";
+                for (int i = 0; i < slideShow.getSlides().size(); i++) {
+                    source = slideShow.getSlides().get(i).getImagePath() + SLASH + slideShow.getSlides().get(i).getImageFileName();
+                    dest = "sites/" + slideShow.getTitle() + "/img/" + slideShow.getSlides().get(i).getImageFileName();
+                    Files.copy(Paths.get(source), Paths.get(dest), StandardCopyOption.REPLACE_EXISTING);
+                }
 
                 File jsDirectory = new File("sites/" + slideShow.getTitle() + "/JS");
                 jsDirectory.mkdir();
 
                 File jsFile = new File("sites/" + slideShow.getTitle() + "/JS/slideshow.js");
                 Writer writerJS = new BufferedWriter(new FileWriter(jsFile));
-                
-                writerJS.write("var indexOfSlide=0;"
-                        + "function Prev(){"
-                        + "indexOfSlide--;"
+                writerJS.write("var imgs=new Array();\n"
+                        + "var caps =new Array();\n"
+                        + "var indexOfSlide=1;\n"
+                        + "var timeOfSlide = 2000;\n"
+                        + "var slideShowTimer;\n");
+                for (int i = 0; i < slideShow.getSlides().size(); i++) {
+                    writerJS.write("imgs[" + (i + 1) + "]='img/" + slideShow.getSlides().get(i).getImageFileName() + "\';\n");
+                    writerJS.write("caps[" + (i + 1) + "]=\"" + slideShow.getSlides().get(i).getCaption() + "\";\n");
+                }
+                writerJS.write("function nextSlide(){\n"
+                        + "    indexOfSlide++;\n"
+                        + "    if(indexOfSlide>" + (slideShow.getSlides().size()) + ")\n"
+                        + "        indexOfSlide=1;\n"
+                        + "    document.images.slideShow.src=imgs[indexOfSlide];\n"
+                        + "    document.getElementById(\"caption\").innerHTML=caps[indexOfSlide]; \n"
+                        + "}\n\n");
+                writerJS.write("function prevSlide(){\n"
+                        + "    indexOfSlide--;\n"
+                        + "    if(indexOfSlide<1)\n"
+                        + "        indexOfSlide=" + slideShow.getSlides().size() + ";\n"
+                        + "    document.images.slideShow.src=imgs[indexOfSlide];\n"
+                        + "    document.getElementById(\"caption\").innerHTML=caps[indexOfSlide];\n"
+                        + "}\n\n"
+                        //  + "function changeToPause(){\n"
+                        //  + "    document.getElementById(\"play\").innerHTML = \"pause\";\n"
+                        //  + "    document.getElementById(\"play\").onClick = changeToPlay();\n"
+                        //  + "    document.getElementById(\"play\").id = 'pause';\n"
+                        //  + "    playSlide();\n"
+                        //  + "}\n"
+                        + "\n"
+                        + "function playSlide() {\n"
+                        + "     var recur=\"playSlide()\";\n"
+                        + "     slideShowTimer=setTimeout(recur,timeOfSlide);\n"
+                        + "     nextSlide();"
+                        + "\n"
+                        + "}\n"
+                        + "\n"
+                        //   + "function changeToPlay(){\n"
+                        //   + "    document.getElementById(\"pause\").innerHTML = \"play\";\n"
+                        //   + "    document.getElementById(\"pause\").onClick = changeToPause();\n"
+                        //   + "    document.getElementById(\"pause\").id = 'play';\n"
+                        //   + "    pause();\n"
+                        //   + "}"
+                        + "\n"
+                        + "function pause(){\n"
+                        + "    clearTimeout(slideShowTimer);\n"
                         + "}");
                 writerJS.close();
 
-                File imgDirectory = new File("sites/" + slideShow.getTitle() + "/img");
-                imgDirectory.mkdir();
-                String source="";
-                String dest="";
-                for(int i=0;i<slideShow.getSlides().size();i++){
-                source =slideShow.getSlides().get(i).getImagePath()+SLASH+slideShow.getSlides().get(i).getImageFileName();
-                dest ="sites/"+slideShow.getTitle()+"/img/"+slideShow.getSlides().get(i).getImageFileName();        
-                Files.copy(Paths.get(source),Paths.get(dest),StandardCopyOption.REPLACE_EXISTING);                
-                }
-                
-                WebView webView=new WebView();
+                WebView webView = new WebView();
                 webView.getEngine().load(file.toURI().toString());
-                Stage blah=new Stage();
+                Stage blah = new Stage();
+                blah.getIcons().add(new Image("file:./images/icons/Icon.png"));
                 blah.setTitle(slideShow.getTitle());
-                Scene blahScene=new Scene(webView,350,350);
+                Scene blahScene = new Scene(webView, 700, 600);
                 blah.setScene(blahScene);
                 blah.show();
-
             } catch (IOException ex) {
                 System.out.println("Exception");
             }
-//            try {
-//                Stage p = new Stage();
-//                p.getIcons().add(new Image("file:./images/icons/Icon.png"));
-//                BorderPane mainPane = new BorderPane();
-//                mainPane.setPadding(new Insets(12, 12, 12, 12));
-//                //Top part of the pane(Add the caption)
-//                //middle part of the pane(Add the image)
-//                //Bottom part of the pane(Add the buttons)
-//                slideShowControls = new HBox();
-//                slideShowControls.setSpacing(5);
-//                mainPane.setBottom(slideShowControls);
-//                previousSlideButton = this.initChildButton(slideShowControls, ICON_PREVIOUS, TOOLTIP_PREVIOUS_SLIDE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
-//                nextSlideButton = this.initChildButton(slideShowControls, ICON_NEXT, TOOLTIP_NEXT_SLIDE, CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON, false);
-//                indexOfSlide = 0;
-//                slide = slideShow.getSlides().get(indexOfSlide);
-//                imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
-//                file = new File(imagePath);
-//                fileURL = file.toURI().toURL();
-//                slideImage = new Image(fileURL.toExternalForm());
-//                image = new ImageView(slideImage);
-//                showCap = new Label(slide.getCaption());
-//                imgCap = new VBox();
-//                imgCap.getChildren().addAll(image, showCap);
-//                mainPane.setCenter(imgCap);
-//                Scene slideShowScene = new Scene(mainPane, 820, 700);
-//                nextSlideButton.setOnAction(e1 -> {
-//                    try {
-//                        indexOfSlide++;
-//                        indexOfSlide = indexOfSlide % slideShow.getSlides().size();
-//                        slide = slideShow.getSlides().get(indexOfSlide);
-//                        imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
-//                        file = new File(imagePath);
-//                        fileURL = file.toURI().toURL();
-//                        slideImage = new Image(fileURL.toExternalForm());
-//                        image = new ImageView(slideImage);
-//                        showCap = new Label(slide.getCaption());
-//                        imgCap = new VBox();
-//                        imgCap.getChildren().addAll(image, showCap);
-//                        mainPane.setCenter(imgCap);
-//                    } catch (MalformedURLException ex) {
-//                        Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//
-//                });
-//
-//                previousSlideButton.setOnAction(e1 -> {
-//                    try {
-//                        indexOfSlide--;
-//                        indexOfSlide = (int) Math.abs(indexOfSlide % slideShow.getSlides().size());
-//                        slide = slideShow.getSlides().get(indexOfSlide);
-//                        imagePath = slide.getImagePath() + SLASH + slide.getImageFileName();
-//                        file = new File(imagePath);
-//                        fileURL = file.toURI().toURL();
-//                        slideImage = new Image(fileURL.toExternalForm());
-//                        image = new ImageView(slideImage);
-//                        showCap = new Label(slide.getCaption());
-//                        imgCap = new VBox();
-//                        imgCap.getChildren().addAll(image, showCap);
-//                        mainPane.setCenter(imgCap);
-//                    } catch (MalformedURLException ex) {
-//                        Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                });
-//
-//                p.setScene(slideShowScene);
-//                p.setTitle(slideShow.getTitle());
-//                p.setFullScreen(true);
-//                p.show();
-//            } catch (MalformedURLException ex) {
-//                Logger.getLogger(SlideShowMakerView.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//
         });
 
         // THEN THE SLIDE SHOW EDIT CONTROLS
@@ -561,6 +547,7 @@ public class SlideShowMakerView {
     private void initFileToolbar() {
         fileToolbarPane = new FlowPane();
         fileToolbarPane.setHgap(5);
+        fileToolbarPane.setPadding(new Insets(5, 5, 5, 5));
 
         // HERE ARE OUR FILE TOOLBAR BUTTONS, NOTE THAT SOME WILL
         // START AS ENABLED (false), WHILE OTHERS DISABLED (true)
