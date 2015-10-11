@@ -373,10 +373,10 @@ public class SlideShowMakerView {
                         + "        <div id=\"Captions\">\n"
                         + "            <label id=\"caption\">" + slideShow.getSlides().get(0).getCaption() + "</label>\n"
                         + "            <br>\n"
-                        + "            <button onClick=\"prevSlide()\"> Previous </button>\n"
-                        + "            <button id=\"play\" onClick=\"playSlide()\"> Play </button>"
-                        + "            <button id=\"pause\" onClick=\"pause()\"> Pause </button>"
-                        + "            <button onClick=\"nextSlide()\"> Next </button>\n"
+                        + "            <button onClick=\"prevSlide()\"><img src=\"img/Previous.png\" alt=\"Image doesn't exist\" style=\"width:20px;height:20px;\" > </button>\n"
+                        + "            <button id=\"play\" onClick=\"playSlide()\"> <img src=\"img/play.png\" alt=\"Image doesn't exist\" style=\"width:20px;height:20px;\"> </button>\n"
+                        + "            <button id=\"pause\" onClick=\"pause()\"> <img src=\"img/pause.png\"  alt=\"Image doesn't exist\" style=\"width:20px;height:20px;\"> </button>\n"
+                        + "            <button onClick=\"nextSlide()\"><img src=\"img/Next.png\" alt=\"Image doesn't exist\" style=\"width:20px;height:20px;\"></button>\n"
                         + "        </div>\n"
                         + "    </body>\n"
                         + "</html>");
@@ -410,6 +410,10 @@ public class SlideShowMakerView {
 
                 File imgDirectory = new File("sites/" + slideShow.getTitle() + "/img");
                 imgDirectory.mkdir();
+                Files.copy(Paths.get("./images/icons/play.png"),Paths.get("sites/" + slideShow.getTitle() + "/img/play.png/"), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(Paths.get("./images/icons/pause.png"),Paths.get("sites/" + slideShow.getTitle() + "/img/pause.png"), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(Paths.get("./images/icons/Next.png"),Paths.get("sites/" + slideShow.getTitle() + "/img/Next.png"), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(Paths.get("./images/icons/Previous.png"),Paths.get("sites/" + slideShow.getTitle() + "/img/Previous.png"), StandardCopyOption.REPLACE_EXISTING);                
                 String source = "";
                 String dest = "";
                 for (int i = 0; i < slideShow.getSlides().size(); i++) {
@@ -454,7 +458,7 @@ public class SlideShowMakerView {
                         //  + "}\n"
                         + "\n"
                         + "function playSlide() {\n"
-                        + "     var recur=\"playSlide()\";\n"
+                        + "     var recur=\"playSlide()\";\n "
                         + "     slideShowTimer=setTimeout(recur,timeOfSlide);\n"
                         + "     nextSlide();"
                         + "\n"

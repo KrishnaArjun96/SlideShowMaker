@@ -28,7 +28,7 @@ function prevSlide(){
 
 function playSlide() {
      var recur="playSlide()";
-     slideShowTimer=setTimeout(recur,timeOfSlide);
+      slideShowTimer=setTimeout(recur,timeOfSlide);
      nextSlide();
 }
 
