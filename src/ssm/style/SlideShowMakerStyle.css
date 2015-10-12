@@ -16,14 +16,14 @@
 
 .slide_edit_view {
     -fx-background-radius: 10.0;
-    -fx-background-color: rgb(90, 240, 90);
+    -fx-background-color: rgb(255, 102, 0);
     -fx-border-color: rgb(70, 5, 5);
     -fx-border-thickness: 10px;
     -fx-spacing: 60px;
 }
 
 .vertical_toolbar_button {
-    -fx-background-color: rgb(250, 130, 130);
+    -fx-background-color: rgb(255, 0, 255);
     -fx-padding: 10px 10px 10px 10px;
     -fx-spacing: 50px;
 }
