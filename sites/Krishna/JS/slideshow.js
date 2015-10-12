@@ -6,15 +6,17 @@ var slideShowTimer;
 var play=false;
 imgs[1]='img/YosemiteCalifornia.jpg';
 caps[1]="California";
-imgs[2]='img/SignalHillNewfoundland.jpg';
-caps[2]="Hills";
-imgs[3]='img/ArchesUtah.jpg';
-caps[3]="Rocks";
-imgs[4]='img/CarhengeNebraska.jpg';
-caps[4]="Dead cars";
+imgs[2]='img/ArchesUtah.jpg';
+caps[2]="Rocks";
+imgs[3]='img/SignalHillNewfoundland.jpg';
+caps[3]="Hills";
+imgs[4]='img/SaltUtah.jpg';
+caps[4]="Salt Utah";
+imgs[5]='img/CarhengeNebraska.jpg';
+caps[5]="Dead cars";
 function nextSlide(){
     indexOfSlide++;
-    if(indexOfSlide>4)
+    if(indexOfSlide>5)
         indexOfSlide=1;
     document.images.slideShow.src=imgs[indexOfSlide];
     document.getElementById("caption").innerHTML=caps[indexOfSlide]; 
@@ -23,7 +25,7 @@ function nextSlide(){
 function prevSlide(){
     indexOfSlide--;
     if(indexOfSlide<1)
-        indexOfSlide=4;
+        indexOfSlide=5;
     document.images.slideShow.src=imgs[indexOfSlide];
     document.getElementById("caption").innerHTML=caps[indexOfSlide];
 }

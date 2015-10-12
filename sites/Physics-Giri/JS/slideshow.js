@@ -4,12 +4,12 @@ var indexOfSlide=1;
 var timeOfSlide = 3000;
 var slideShowTimer;
 var play=false;
-imgs[1]='img/OregonTrailNebraska.jpg';
-caps[1]="Oregon";
-imgs[2]='img/ToadstoolNebraska.jpg';
-caps[2]="ToadStool";
-imgs[3]='img/GreatPlainsNebraska.jpg';
-caps[3]="Plains";
+imgs[1]='img/ArchesUtah.jpg';
+caps[1]="One ";
+imgs[2]='img/GreatPlainsNebraska.jpg';
+caps[2]="Two";
+imgs[3]='img/OregonTrailNebraska.jpg';
+caps[3]="Three";
 function nextSlide(){
     indexOfSlide++;
     if(indexOfSlide>3)

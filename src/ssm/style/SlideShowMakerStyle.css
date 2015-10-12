@@ -42,7 +42,7 @@
 }
 
 .top_toolbar{
-    -fx-background-color: rgb(255,205,120);
+    -fx-background-color: rgb(255,225,0);
     -fx-hgap:10;
     -fx-padding: 5px 5px 5px 5px;
 }
@@ -58,4 +58,14 @@
 
 .ssm_scroll_pane{
     -fx-background: rgb(270,200,120); 
+}
+
+.ssm_text_field{
+    -fx-font-family: Harrington;
+    -fx-font-size: 14pt;
+}
+
+.ssm_label{
+    -fx-font-family: Harrington;
+    -fx-font-size: 20pt;
 }

@@ -54,9 +54,11 @@ import static ssm.LanguagePropertyType.TOOLTIP_VIEW_SLIDE_SHOW;
 import ssm.SlideShowMaker;
 import static ssm.StartupConstants.CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON;
 import static ssm.StartupConstants.CSS_CLASS_SLIDE_SHOW_EDIT_VBOX;
+import static ssm.StartupConstants.CSS_CLASS_SSM_LABEL;
 import static ssm.StartupConstants.CSS_CLASS_SSM_PANE;
 import static ssm.StartupConstants.CSS_CLASS_SSM_SCROLL_PANE;
 import static ssm.StartupConstants.CSS_CLASS_SSM_SLIDE_EDITOR_PANE;
+import static ssm.StartupConstants.CSS_CLASS_SSM_TEXT_FIELD;
 import static ssm.StartupConstants.CSS_CLASS_TOP_TOOLBAR;
 import static ssm.StartupConstants.CSS_CLASS_VERTICAL_TOOLBAR_BUTTON;
 import static ssm.StartupConstants.ICON_ADD_SLIDE;
@@ -143,7 +145,6 @@ public class SlideShowMakerView {
     HBox slideShowControls;
     Button previousSlideButton;
     Button nextSlideButton;
-    
 
     //For SlideShow variables
     Slide slide;
@@ -236,18 +237,22 @@ public class SlideShowMakerView {
         //slidesEditorPane.setStyle("-fx-background-color:rgb(255,225,78)");
 
         Label promptTitle;
+        String cssTextField = CSS_CLASS_SSM_TEXT_FIELD;
+        String cssLabel = CSS_CLASS_SSM_LABEL;
 
         //Adding a text field to enter the title of the slide show (MY WORK)
         if (SlideShowMaker.lang.getValue().equals("English")) {
             promptTitle = new Label("Title:");
-            promptTitle.setFont(Font.font("Harrington", 20));
+            promptTitle.getStyleClass().add(cssLabel);
             title = new TextField();
-            title.setFont(Font.font("Harrington", 14));
+            title.getStyleClass().add(cssTextField);
             title.setPromptText("ENTER TITLE");
         } else {
-            promptTitle = new Label("título:");
+            promptTitle = new Label("Título:");
             title = new TextField();
-            title.setPromptText("entrar título");
+            title.getStyleClass().add(cssTextField);
+            promptTitle.getStyleClass().add(cssLabel);
+            title.setPromptText("Entrar título");
         }
 
         // NOW PUT THESE TWO IN THE WORKSPACE
@@ -275,9 +280,7 @@ public class SlideShowMakerView {
             if (slideShow.getSlides().size() > 1) {
                 upSlideButton.setDisable(false);
                 downSlideButton.setDisable(false);
-            } //IF SIZE >= 1
-            //SET REMOVESLIDE DISABLE FALSE;
-            else if (slideShow.getSlides().size() <= 1) {
+            } else if (slideShow.getSlides().size() <= 1) {
                 upSlideButton.setDisable(true);
                 downSlideButton.setDisable(true);
             } else if (slideShow.getSlides().size() == 0) {
@@ -299,6 +302,7 @@ public class SlideShowMakerView {
                 exit.setTitle("Salida?");
             }
             VBox exitPane = new VBox(50);
+            exitPane.setStyle(SLASH);
             exitPane.setStyle("-fx-background-color: rgb(255,225,78);");
             exitPane.setPadding(new Insets(10, 10, 10, 10));
             String labText = "";
@@ -350,6 +354,8 @@ public class SlideShowMakerView {
 
         //The slideshow web view is generated here
         viewSlideShowButton.setOnAction(e -> {
+            fileController.handleSaveSlideShowRequest();
+            saved = true;
 
             File Sites = new File("sites");
             Sites.mkdir();
@@ -402,7 +408,7 @@ public class SlideShowMakerView {
                         + "h1 {\n"
                         + "    font-family: \"Cooper Black\";\n"
                         + "    text-align: left;\n"
-                        + "    background-color:#CC1234;\n"
+                        + "    background-color:orange;\n"
                         + "    font-size: 40px;\n"
                         + "    text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF; \n"
                         + "}\n"

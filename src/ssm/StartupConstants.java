@@ -46,7 +46,10 @@ public class StartupConstants {
     public static String    CSS_CLASS_TOP_TOOLBAR="top_toolbar";
     public static String    CSS_CLASS_SSM_PANE="ssm_pane";
     public static String    CSS_CLASS_SSM_SLIDE_EDITOR_PANE="ssm_slide_editor_pane";
-    public static String    CSS_CLASS_SSM_SCROLL_PANE="ssm_scroll_pane";    
+    public static String    CSS_CLASS_SSM_SCROLL_PANE="ssm_scroll_pane";
+    public static String    CSS_CLASS_SSM_TEXT_FIELD="ssm_text_field";
+    public static String    CSS_CLASS_SSM_LABEL="ssm_label";
+
     // UI LABELS
     public static String    LABEL_SLIDE_SHOW_TITLE = "slide_show_title";
 
