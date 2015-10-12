@@ -75,7 +75,7 @@ public class SlideEditView extends HBox {
 
         //A listener for the caption text field, (MY WORK)
         captionTextField.textProperty().addListener(new ChangeListener<String>() {
-
+            
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 slide.setCaption(newValue);

@@ -54,6 +54,10 @@ import static ssm.LanguagePropertyType.TOOLTIP_VIEW_SLIDE_SHOW;
 import ssm.SlideShowMaker;
 import static ssm.StartupConstants.CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON;
 import static ssm.StartupConstants.CSS_CLASS_SLIDE_SHOW_EDIT_VBOX;
+import static ssm.StartupConstants.CSS_CLASS_SSM_PANE;
+import static ssm.StartupConstants.CSS_CLASS_SSM_SCROLL_PANE;
+import static ssm.StartupConstants.CSS_CLASS_SSM_SLIDE_EDITOR_PANE;
+import static ssm.StartupConstants.CSS_CLASS_TOP_TOOLBAR;
 import static ssm.StartupConstants.CSS_CLASS_VERTICAL_TOOLBAR_BUTTON;
 import static ssm.StartupConstants.ICON_ADD_SLIDE;
 import static ssm.StartupConstants.ICON_EXIT;
@@ -139,6 +143,7 @@ public class SlideShowMakerView {
     HBox slideShowControls;
     Button previousSlideButton;
     Button nextSlideButton;
+    
 
     //For SlideShow variables
     Slide slide;
@@ -214,8 +219,6 @@ public class SlideShowMakerView {
 
         // THIS WILL GO IN THE LEFT SIDE OF THE SCREEN
         slideEditToolbar = new VBox();
-        slideEditToolbar.setSpacing(10);
-        slideEditToolbar.setPadding(new Insets(5, 5, 5, 5));
         slideEditToolbar.getStyleClass().add(CSS_CLASS_SLIDE_SHOW_EDIT_VBOX);
         addSlideButton = this.initChildButton(slideEditToolbar, ICON_ADD_SLIDE, TOOLTIP_ADD_SLIDE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
         removeSlideButton = this.initChildButton(slideEditToolbar, ICON_REMOVE_SLIDE, TOOLTIP_REMOVE_SLIDE, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
@@ -224,10 +227,16 @@ public class SlideShowMakerView {
         downSlideButton = this.initChildButton(slideEditToolbar, ICON_MOVE_DOWN, TOOLTIP_MOVE_DOWN, CSS_CLASS_VERTICAL_TOOLBAR_BUTTON, true);
         // AND THIS WILL GO IN THE CENTER
         slidesEditorPane = new VBox();
-        slidesEditorPane.setSpacing(10);
+        String cssSlidesEditorPane = CSS_CLASS_SSM_SLIDE_EDITOR_PANE;
+        slidesEditorPane.getStyleClass().add(cssSlidesEditorPane);
         slidesEditorScrollPane = new ScrollPane(slidesEditorPane);
 
+        String cssScrollPane = CSS_CLASS_SSM_SCROLL_PANE;
+        slidesEditorScrollPane.getStyleClass().add(cssScrollPane);
+        //slidesEditorPane.setStyle("-fx-background-color:rgb(255,225,78)");
+
         Label promptTitle;
+
         //Adding a text field to enter the title of the slide show (MY WORK)
         if (SlideShowMaker.lang.getValue().equals("English")) {
             promptTitle = new Label("Title:");
@@ -366,17 +375,16 @@ public class SlideShowMakerView {
                         + "    </head>\n"
                         + "    <body>\n"
                         + "        <h1>" + slideShow.getTitle() + "</h1>\n"
-                        + "        <div align=\"center\" color=\"purple\">\n"
-                        + "         <img src=\"img/" + slideShow.getSlides().get(0).getImageFileName() + "\" id=\"slideShow\" alt=\"Image doesn't exist\" style=\"width:454px;height:458px;\"> \n "
+                        + "        <div align=\"center\">\n"
+                        + "         <img src=\"img/" + slideShow.getSlides().get(0).getImageFileName() + "\" id=\"slideShow\" alt=\"Image doesn't exist\" style=\"width:440px;height:440px;\"> \n "
                         + "            <br>\n"
                         + "        </div>\n"
                         + "        <div id=\"Captions\">\n"
                         + "            <label id=\"caption\">" + slideShow.getSlides().get(0).getCaption() + "</label>\n"
                         + "            <br>\n"
-                        + "            <button onClick=\"prevSlide()\"><img src=\"img/Previous.png\" alt=\"Image doesn't exist\" style=\"width:20px;height:20px;\" > </button>\n"
-                        + "            <button id=\"play\" onClick=\"playSlide()\"> <img src=\"img/play.png\" alt=\"Image doesn't exist\" style=\"width:20px;height:20px;\"> </button>\n"
-                        + "            <button id=\"pause\" onClick=\"pause()\"> <img src=\"img/pause.png\"  alt=\"Image doesn't exist\" style=\"width:20px;height:20px;\"> </button>\n"
-                        + "            <button onClick=\"nextSlide()\"><img src=\"img/Next.png\" alt=\"Image doesn't exist\" style=\"width:20px;height:20px;\"></button>\n"
+                        + "            <button onClick=\"prevSlide()\"><img id=\"icons\" src=\"img/Previous.png\" alt=\"Image doesn't exist\" > </button>\n"
+                        + "            <button id=\"flip\" onClick=\"decidor()\"> <img id=\"icons\" src=\"img/play.png\" alt=\"Image doesn't exist\"> </button>\n"
+                        + "            <button onClick=\"nextSlide()\"><img id=\"icons\" src=\"img/Next.png\" alt=\"Image doesn't exist\"></button>\n"
                         + "        </div>\n"
                         + "    </body>\n"
                         + "</html>");
@@ -388,32 +396,40 @@ public class SlideShowMakerView {
                 File cssFile = new File("sites/" + slideShow.getTitle() + "/CSS/slideshow.css");
                 Writer writerCSS = new BufferedWriter(new FileWriter(cssFile));
                 writerCSS.write("body {\n"
+                        + "background-color:skyblue;\n"
                         + "}\n"
                         + "\n"
                         + "h1 {\n"
-                        + "    font-family: \"Harrington\";\n"
+                        + "    font-family: \"Cooper Black\";\n"
                         + "    text-align: left;\n"
-                        + "    background-color:#CC0000;\n"
-                        + "    font-size: 40px;"
-                        + "    text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;"
+                        + "    background-color:#CC1234;\n"
+                        + "    font-size: 40px;\n"
+                        + "    text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF; \n"
+                        + "}\n"
+                        + "#icons{\n"
+                        + "    width:20px;\n"
+                        + "    height:20px;\n"
                         + "}\n"
                         + "\n"
+                        + "#slideShow{\n"
+                        + "border: 5px groove rgba(0, 0, 255, 0.3);\n"
+                        + "}\n"
                         + "#Captions {\n"
                         + "    text-align: center;\n"
-                        + "    background-color: navy;\n"
-                        + "}"
-                        + "p {\n"
-                        + "    font-family: \"Harrington\";\n"
-                        + "    font-size: 20px;\n"
+                        + "    background-color: Gray;\n"
+                        + "}\n"
+                        + "#caption {\n"
+                        + "    font-family: \"Comic Sans MS\";\n"
+                        + "    font-size: 30px;\n"
                         + "}");
                 writerCSS.close();
 
                 File imgDirectory = new File("sites/" + slideShow.getTitle() + "/img");
                 imgDirectory.mkdir();
-                Files.copy(Paths.get("./images/icons/play.png"),Paths.get("sites/" + slideShow.getTitle() + "/img/play.png/"), StandardCopyOption.REPLACE_EXISTING);
-                Files.copy(Paths.get("./images/icons/pause.png"),Paths.get("sites/" + slideShow.getTitle() + "/img/pause.png"), StandardCopyOption.REPLACE_EXISTING);
-                Files.copy(Paths.get("./images/icons/Next.png"),Paths.get("sites/" + slideShow.getTitle() + "/img/Next.png"), StandardCopyOption.REPLACE_EXISTING);
-                Files.copy(Paths.get("./images/icons/Previous.png"),Paths.get("sites/" + slideShow.getTitle() + "/img/Previous.png"), StandardCopyOption.REPLACE_EXISTING);                
+                Files.copy(Paths.get("./images/icons/play.png"), Paths.get("sites/" + slideShow.getTitle() + "/img/play.png/"), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(Paths.get("./images/icons/pause.png"), Paths.get("sites/" + slideShow.getTitle() + "/img/pause.png"), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(Paths.get("./images/icons/Next.png"), Paths.get("sites/" + slideShow.getTitle() + "/img/Next.png"), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(Paths.get("./images/icons/Previous.png"), Paths.get("sites/" + slideShow.getTitle() + "/img/Previous.png"), StandardCopyOption.REPLACE_EXISTING);
                 String source = "";
                 String dest = "";
                 for (int i = 0; i < slideShow.getSlides().size(); i++) {
@@ -430,8 +446,9 @@ public class SlideShowMakerView {
                 writerJS.write("var imgs=new Array();\n"
                         + "var caps =new Array();\n"
                         + "var indexOfSlide=1;\n"
-                        + "var timeOfSlide = 2000;\n"
-                        + "var slideShowTimer;\n");
+                        + "var timeOfSlide = 3000;\n"
+                        + "var slideShowTimer;\n"
+                        + "var play=false;\n");
                 for (int i = 0; i < slideShow.getSlides().size(); i++) {
                     writerJS.write("imgs[" + (i + 1) + "]='img/" + slideShow.getSlides().get(i).getImageFileName() + "\';\n");
                     writerJS.write("caps[" + (i + 1) + "]=\"" + slideShow.getSlides().get(i).getCaption() + "\";\n");
@@ -450,26 +467,28 @@ public class SlideShowMakerView {
                         + "    document.images.slideShow.src=imgs[indexOfSlide];\n"
                         + "    document.getElementById(\"caption\").innerHTML=caps[indexOfSlide];\n"
                         + "}\n\n"
-                        //  + "function changeToPause(){\n"
-                        //  + "    document.getElementById(\"play\").innerHTML = \"pause\";\n"
-                        //  + "    document.getElementById(\"play\").onClick = changeToPlay();\n"
-                        //  + "    document.getElementById(\"play\").id = 'pause';\n"
-                        //  + "    playSlide();\n"
-                        //  + "}\n"
+                        + "function decidor(){\n"
+                        + "    if(play===false){\n"
+                        + "            document.getElementById(\"flip\").innerHTML= \"<img src=\\\"img/pause.png\\\"  alt=\\\"Image doesn't exist\\\" style=\\\"width:20px;height:20px;\\\">\"; \n"
+                        + "            playSlide();\n"
+                        + "            play=true;\n"
+                        + "    }\n"
+                        + "    else\n"
+                        + "    {\n"
+                        + "        document.getElementById(\"flip\").innerHTML= \"<img src=\\\"img/play.png\\\"  alt=\\\"Image doesn't exist\\\" style=\\\"width:20px;height:20px;\\\">\"; \n"
+                        + "        pause();\n"
+                        + "        play=false;\n"
+                        + "    }\n"
+                        + "        \n"
+                        + "}"
                         + "\n"
                         + "function playSlide() {\n"
+                        + "     nextSlide();\n"
                         + "     var recur=\"playSlide()\";\n "
                         + "     slideShowTimer=setTimeout(recur,timeOfSlide);\n"
-                        + "     nextSlide();"
                         + "\n"
                         + "}\n"
                         + "\n"
-                        //   + "function changeToPlay(){\n"
-                        //   + "    document.getElementById(\"pause\").innerHTML = \"play\";\n"
-                        //   + "    document.getElementById(\"pause\").onClick = changeToPause();\n"
-                        //   + "    document.getElementById(\"pause\").id = 'play';\n"
-                        //   + "    pause();\n"
-                        //   + "}"
                         + "\n"
                         + "function pause(){\n"
                         + "    clearTimeout(slideShowTimer);\n"
@@ -481,7 +500,7 @@ public class SlideShowMakerView {
                 Stage blah = new Stage();
                 blah.getIcons().add(new Image("file:./images/icons/Icon.png"));
                 blah.setTitle(slideShow.getTitle());
-                Scene blahScene = new Scene(webView, 700, 600);
+                Scene blahScene = new Scene(webView, 750, 640);
                 blah.setScene(blahScene);
                 blah.show();
             } catch (IOException ex) {
@@ -550,8 +569,8 @@ public class SlideShowMakerView {
      */
     private void initFileToolbar() {
         fileToolbarPane = new FlowPane();
-        fileToolbarPane.setHgap(5);
-        fileToolbarPane.setPadding(new Insets(5, 5, 5, 5));
+        String cssToolbar = CSS_CLASS_TOP_TOOLBAR;
+        fileToolbarPane.getStyleClass().add(cssToolbar);
 
         // HERE ARE OUR FILE TOOLBAR BUTTONS, NOTE THAT SOME WILL
         // START AS ENABLED (false), WHILE OTHERS DISABLED (true)
@@ -579,7 +598,8 @@ public class SlideShowMakerView {
 
         // SETUP THE UI, NOTE WE'LL ADD THE WORKSPACE LATER
         ssmPane = new BorderPane();
-        ssmPane.setStyle("-fx-background-color: rgb(255,225,78);");
+        String ssmStyle = CSS_CLASS_SSM_PANE;
+        ssmPane.getStyleClass().add(ssmStyle);
         ssmPane.setTop(fileToolbarPane);
         primaryScene = new Scene(ssmPane);
 

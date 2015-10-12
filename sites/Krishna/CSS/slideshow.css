@@ -1,16 +1,27 @@
 body {
+background-color:skyblue;
 }
 
 h1 {
-    font-family: "Harrington";
+    font-family: "Cooper Black";
     text-align: left;
-    background-color:#CC0000;
-    font-size: 40px;    text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;}
+    background-color:#CC1234;
+    font-size: 40px;
+    text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF; 
+}
+#icons{
+    width:20px;
+    height:20px;
+}
 
+#slideShow{
+border: 5px groove rgba(0, 0, 255, 0.3);
+}
 #Captions {
     text-align: center;
-    background-color: navy;
-}p {
-    font-family: "Harrington";
-    font-size: 20px;
+    background-color: Gray;
+}
+#caption {
+    font-family: "Comic Sans MS";
+    font-size: 30px;
 }

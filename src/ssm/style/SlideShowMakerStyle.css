@@ -7,8 +7,11 @@
 
 .slide_show_edit_vbox {
     -fx-background-radius: 5.0;
-    -fx-background-color: rgb(255,225,78);
+    -fx-background-color: rgb(255,225,120);
     -fx-border-color: rgb(50, 5, 5);
+    -fx-spacing:10px;
+    -fx-padding:10px;
+    -fx-alignment: CENTER;
 }
 
 .slide_edit_view {
@@ -34,7 +37,25 @@
     -fx-background-color: rgb(255,225,78);
     -fx-padding: 12px 12px 12px 12px;
     -fx-font-family:"Harrington";
-    -fx-font-size: 20pt;
+    -fx-font-size: 12pt; 
     -fx-alignment: CENTER;
-    
+}
+
+.top_toolbar{
+    -fx-background-color: rgb(255,205,120);
+    -fx-hgap:10;
+    -fx-padding: 5px 5px 5px 5px;
+}
+
+.ssm_pane{
+    -fx-background-color: rgb(255,225,78);
+}
+
+.ssm_slide_editor_pane{
+    -fx-padding: 3px 3px 3px 3px;
+    -fx-spacing: 5px;
+}
+
+.ssm_scroll_pane{
+    -fx-background: rgb(270,200,120); 
 }

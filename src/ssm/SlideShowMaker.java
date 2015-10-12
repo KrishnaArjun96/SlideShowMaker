@@ -24,6 +24,7 @@ import static ssm.StartupConstants.UI_PROPERTIES_FILE_NAME;
 import ssm.error.ErrorHandler;
 import ssm.file.SlideShowFileManager;
 import ssm.view.SlideShowMakerView;
+import static ssm.StartupConstants.STYLE_SHEET_UI;
 
 /**
  * SlideShowMaker is a program for making custom image slideshows. It will allow
@@ -56,21 +57,24 @@ public class SlideShowMaker extends Application {
             //Dialog box for language selection(MY WORK)
             Stage window = new Stage();
             VBox layout = new VBox(50);
-            //layout.getStylesheets().add(CSS_CLASS_LANGUAGE_PROMPT);
-            layout.setStyle("-fx-background-color: rgb(255,225,78);");
-            layout.setPadding(new Insets(10, 10, 10, 10));
+            String langCSS = CSS_CLASS_LANGUAGE_PROMPT;
+            layout.getStyleClass().add(langCSS);
+            //layout.getStylesheets().add(langCSS);            
+            //layout.setStyle("-fx-background-color: rgb(255,225,78);");
+            //layout.setPadding(new Insets(10, 10, 10, 10));
             Label prompt = new Label("Preferred language:");
-            prompt.setFont(Font.font ("Harrington", 20));
+            prompt.setFont(Font.font("Harrington", 20));
             lang = new ComboBox();
             lang.getItems().addAll("English", "Spanish");
             lang.setValue("English");
             Button ok = new Button("Ok");
-            ok.setFont(Font.font ("Harrington",16));
+            ok.setFont(Font.font("Harrington", 16));
             ok.setAlignment(Pos.CENTER);
             layout.getChildren().addAll(prompt, lang, ok);
             window.getIcons().add(new Image("file:./images/icons/Icon.png"));
             Scene scene = new Scene(layout, 300, 300);
             window.setScene(scene);
+            scene.getStylesheets().add(STYLE_SHEET_UI);
             window.setTitle("Language prompt");
             window.show();
             ok.setOnAction((ActionEvent e) -> {

@@ -42,6 +42,11 @@ public class StartupConstants {
     public static String    CSS_CLASS_SLIDE_SHOW_EDIT_VBOX = "slide_show_edit_vbox";
     public static String    CSS_CLASS_SLIDE_EDIT_VIEW = "slide_edit_view";
     public static String    CSS_CLASS_LANGUAGE_PROMPT = "language_prompt_vbox";
+    public static String    CSS_CLASS_LEFT_TOOLBAR="left_toolbar";
+    public static String    CSS_CLASS_TOP_TOOLBAR="top_toolbar";
+    public static String    CSS_CLASS_SSM_PANE="ssm_pane";
+    public static String    CSS_CLASS_SSM_SLIDE_EDITOR_PANE="ssm_slide_editor_pane";
+    public static String    CSS_CLASS_SSM_SCROLL_PANE="ssm_scroll_pane";    
     // UI LABELS
     public static String    LABEL_SLIDE_SHOW_TITLE = "slide_show_title";
 
