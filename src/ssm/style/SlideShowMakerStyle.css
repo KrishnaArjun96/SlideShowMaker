@@ -69,3 +69,25 @@
     -fx-font-family: Harrington;
     -fx-font-size: 20pt;
 }
+
+.ssm_exit_vbox{
+    -fx-background-color: rgb(255,225,120);
+    -fx-padding: 12px 12px 12px 12px;
+    -fx-font-family:"Harrington";
+    -fx-font-size: 12pt; 
+    -fx-alignment: CENTER;
+}
+.ssm_exit_label{
+    -fx-font-family: Harrington;
+    -fx-font-size: 16pt;
+}
+
+.ssm_exit_buttons{
+    -fx-font-family: Harrington;
+    -fx-font-size: 14pt;
+}
+
+.ssm_exit_hbox{
+    -fx-alignment:CENTER;
+    -fx-spacing:5px;
+}

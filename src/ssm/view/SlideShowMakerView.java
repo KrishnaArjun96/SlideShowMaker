@@ -53,7 +53,9 @@ import static ssm.LanguagePropertyType.TOOLTIP_SAVE_SLIDE_SHOW;
 import static ssm.LanguagePropertyType.TOOLTIP_VIEW_SLIDE_SHOW;
 import ssm.SlideShowMaker;
 import static ssm.StartupConstants.CSS_CLASS_HORIZONTAL_TOOLBAR_BUTTON;
+import static ssm.StartupConstants.CSS_CLASS_LANGUAGE_PROMPT;
 import static ssm.StartupConstants.CSS_CLASS_SLIDE_SHOW_EDIT_VBOX;
+import static ssm.StartupConstants.CSS_CLASS_SSM_EXIT_BUTTONS;
 import static ssm.StartupConstants.CSS_CLASS_SSM_LABEL;
 import static ssm.StartupConstants.CSS_CLASS_SSM_PANE;
 import static ssm.StartupConstants.CSS_CLASS_SSM_SCROLL_PANE;
@@ -61,6 +63,9 @@ import static ssm.StartupConstants.CSS_CLASS_SSM_SLIDE_EDITOR_PANE;
 import static ssm.StartupConstants.CSS_CLASS_SSM_TEXT_FIELD;
 import static ssm.StartupConstants.CSS_CLASS_TOP_TOOLBAR;
 import static ssm.StartupConstants.CSS_CLASS_VERTICAL_TOOLBAR_BUTTON;
+import static ssm.StartupConstants.CSS_EXIT_HBOX;
+import static ssm.StartupConstants.CSS_EXIT_LABEL;
+import static ssm.StartupConstants.CSS_EXIT_VBOX;
 import static ssm.StartupConstants.ICON_ADD_SLIDE;
 import static ssm.StartupConstants.ICON_EXIT;
 import static ssm.StartupConstants.ICON_LOAD_SLIDE_SHOW;
@@ -295,6 +300,7 @@ public class SlideShowMakerView {
 
         exitButton.setOnAction(e -> {
             Stage exit = new Stage();
+            String ssmExitButtons = CSS_CLASS_SSM_EXIT_BUTTONS;
             exit.getIcons().add(new Image("file:./images/icons/Icon.png"));
             if (SlideShowMaker.lang.getValue().equals("English")) {
                 exit.setTitle("Exit?");
@@ -302,9 +308,10 @@ public class SlideShowMakerView {
                 exit.setTitle("Salida?");
             }
             VBox exitPane = new VBox(50);
-            exitPane.setStyle(SLASH);
-            exitPane.setStyle("-fx-background-color: rgb(255,225,78);");
-            exitPane.setPadding(new Insets(10, 10, 10, 10));
+            String cssExitPane=CSS_EXIT_VBOX;
+            exitPane.getStyleClass().add(cssExitPane);
+            String ssmExitPane=CSS_CLASS_LANGUAGE_PROMPT;
+            exitPane.getStyleClass().add(ssmExitPane);
             String labText = "";
             if (SlideShowMaker.lang.getValue().equals("English")) {
                 labText = "Do you want to save before you quit?";
@@ -312,11 +319,13 @@ public class SlideShowMakerView {
                 labText = "Quieres guardar antes de salir ?";
             }
             Label question = new Label(labText);
-            question.setFont(Font.font("Harrington", 16));
+            String exitLabel=CSS_EXIT_LABEL;
+            question.getStyleClass().add(exitLabel);
             HBox YN = new HBox();
-            YN.setSpacing(10);
+            String cssExitHbox=CSS_EXIT_HBOX;
+            YN.getStyleClass().add(cssExitHbox);
             Button yes = new Button();
-            yes.setFont(Font.font("Harrington", 16));
+            yes.getStyleClass().add(ssmExitButtons);
             if (SlideShowMaker.lang.getValue().equals("English")) {
                 yes.setText("Yes");
             } else {
@@ -329,13 +338,13 @@ public class SlideShowMakerView {
             });
             yes.setDisable(saved);
             Button no = new Button("No");
-            no.setFont(Font.font("Harrington", 16));
+            no.getStyleClass().add(ssmExitButtons);
             no.setOnAction(e2 -> {
                 exit.close();
                 primaryStage.close();
             });
             Button cancel = new Button("Cancel");
-            cancel.setFont(Font.font("Harrington", 16));
+            cancel.getStyleClass().add(ssmExitButtons);
             if (SlideShowMaker.lang.getValue().equals("English")) {
                 cancel.setText("Cancel");
 
@@ -343,10 +352,10 @@ public class SlideShowMakerView {
                 cancel.setText("Cancelar");
             }
             cancel.setOnAction(e3 -> exit.close());
-            YN.setPadding(new Insets(10, 10, 10, 10));
             YN.getChildren().addAll(yes, no, cancel);
             exitPane.getChildren().addAll(question, YN);
-            Scene climax = new Scene(exitPane, 300, 250);
+            Scene climax = new Scene(exitPane, 400, 300);
+            climax.getStylesheets().add(STYLE_SHEET_UI);
             exit.setScene(climax);
             exit.show();
 
